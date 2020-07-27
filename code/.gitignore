@@ -1,3 +1,5 @@
+# Personal ignores
+matlab_code/*
 .DS_Store
 
 # Byte-compiled / optimized / DLL files

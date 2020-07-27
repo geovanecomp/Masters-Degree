@@ -1,3 +1,5 @@
+"""Generates signals and noises considering pileup scenario"""
+
 import sys
 import numpy as np
 from utils import file_helper, pulse_helper

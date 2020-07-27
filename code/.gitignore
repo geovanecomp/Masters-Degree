@@ -1,4 +1,5 @@
 # Personal ignores
+results/*
 matlab_code/*
 .DS_Store
 

@@ -28,7 +28,7 @@ def scatter_hist(x, y, ax, ax_histx, ax_histy):
 if __name__ == '__main__':
     num_events = 100000
 
-    analitic_amplitude = np.loadtxt(DIR_PATH + '/../results/matched_filter/{}-events/amplitude.txt'.format(num_events))
+    analitic_amplitude = np.loadtxt(DIR_PATH + '/../results/base_data/{}-events/amplitude.txt'.format(num_events))
     numeric_amplitude = np.loadtxt(DIR_PATH + '/../results/matched_filter/{}-events/amp_signal.txt'.format(num_events))
 
     fig, ax = plt.subplots()

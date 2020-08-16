@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
-    num_events = 100000
+    num_events = 10000
 
     script_data = np.loadtxt(DIR_PATH + '/../results/matched_filter/{}-events/amp_error.txt'.format(num_events))
 
@@ -20,8 +20,8 @@ if __name__ == '__main__':
     n, bins, patches = ax.hist(script_data, bins="auto")
 
     # Hist plot
-    ax.set_xlabel('Data')
-    ax.set_ylabel('Probability density')
+    ax.set_xlabel('Erro de estimação (GeV)')
+    ax.set_ylabel('Entradas')
     ax.set_title('Matlab Numeric Amplitude: {} events \n' r'$\mu={}$, $\sigma={}$'
                  .format(num_events, mu, sigma))
     ax.grid()

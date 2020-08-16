@@ -19,7 +19,6 @@ if __name__ == '__main__':
 
     fig, ((ax0, ax1)) = plt.subplots(nrows=1, ncols=2)
 
-
     fig.suptitle('{} events'.format(num_events), fontsize=14)
     ax0.hist(matlab_data, bins="auto", density=True, histtype='bar')
     ax0.legend(prop={'size': 10})

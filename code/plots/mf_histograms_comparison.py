@@ -7,8 +7,9 @@ import matplotlib.pyplot as plt
 DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
-    num_events = 100000
-    amplitude = np.loadtxt(DIR_PATH + '/../results/matched_filter/{}-events/amplitude.txt'.format(num_events))
+    num_events = 100
+
+    amplitude = np.loadtxt(DIR_PATH + '/../results/base_data/{}-events/amplitude.txt'.format(num_events))
     amp_signal = np.loadtxt(DIR_PATH + '/../results/matched_filter/{}-events/amp_signal.txt'.format(num_events))
 
     fig, ((ax0, ax1)) = plt.subplots(nrows=1, ncols=2)

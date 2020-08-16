@@ -16,21 +16,13 @@ if __name__ == '__main__':
     qtd_for_training = 10000
     qtd_for_testing = number_of_data - qtd_for_training
 
+    amplitude = pd.read_csv('results/base_data/{}-events/amplitude.txt'.format(qtd_for_training), sep=" ", header=None)
+    signal_testing = pd.read_csv('results/base_data/{}-events/signal_testing.txt'.format(qtd_for_training), sep=" ", header=None)
+
     noise = pd.DataFrame(pedestal + np.random.randn(number_of_data, dimension))
     # Getting data from boundaries
     noise_training = noise[:qtd_for_training][:]
     noise_testing = noise[qtd_for_testing:][:]
-
-    amplitude = np.zeros(qtd_for_testing)
-    signal_testing = np.zeros((qtd_for_testing, dimension))
-
-    for i in range(0, qtd_for_testing):
-        amplitude[i] = TEN_BITS_ADC_VALUE * np.random.random(1)
-        signal_testing[i, :] = pedestal + np.random.randn(1, dimension) + \
-            np.multiply(amplitude[i], pulse_helper.get_jitter_pulse())
-
-    amplitude = pd.DataFrame(amplitude)
-    signal_testing = pd.DataFrame(signal_testing)
 
     # Branqueamento
     noise_train_cov = noise_training.cov()
@@ -159,7 +151,6 @@ if __name__ == '__main__':
     amp_signal = pd.DataFrame(amp_signal)
     amp_error = amp_signal.values - amplitude.values
 
-    file_helper.save_file('amplitude', 'matched_filter', amplitude)
     file_helper.save_file('amp_signal', 'matched_filter', amp_signal)
     file_helper.save_file('amp_noise', 'matched_filter', amp_noise)
     file_helper.save_file('amp_error', 'matched_filter', amp_error)

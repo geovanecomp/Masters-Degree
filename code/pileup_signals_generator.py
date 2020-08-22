@@ -106,15 +106,15 @@ if __name__ == '__main__':
         data = np.transpose(data)
 
         if is_noise:
-            folder_name = 'pileup_data/prob-{}'.format(signal_probability_percentage)
-            base_file_name = 'noise-prob-{}'.format(signal_probability_percentage)
+            folder_name = 'pileup_data/prob_{}'.format(signal_probability_percentage)
+            base_file_name = 'noise-prob_{}'.format(signal_probability_percentage)
             if TILECAL:
                 file_helper.save_file('tile-' + base_file_name, folder_name, data)
             else:
                 file_helper.save_file(base_file_name, folder_name, data)
         else:
-            folder_name = 'pileup_data/prob-{}'.format(signal_probability_percentage)
-            base_file_name = 'signal-prob-{}'.format(signal_probability_percentage)
+            folder_name = 'pileup_data/prob_{}'.format(signal_probability_percentage)
+            base_file_name = 'signal-prob_{}'.format(signal_probability_percentage)
             A = np.zeros(number_of_events)  # Amplitude
             for i in range(0, number_of_events):
                 A[i] = np.random.exponential(signal_mean)  # Simulating true Amplitude

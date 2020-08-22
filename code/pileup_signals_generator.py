@@ -74,7 +74,7 @@ def _apply_pileup_indexes(i, pu_indexes, x):
 
 if __name__ == '__main__':
     # Creating the dataset.
-    number_of_events = 100000
+    number_of_events = 10000
     number_of_samples = _number_of_samples_based_on(TILECAL)
     number_of_data = number_of_samples * number_of_events
 
@@ -109,7 +109,7 @@ if __name__ == '__main__':
             folder_name = 'pileup_data/prob_{}'.format(signal_probability_percentage)
             base_file_name = 'noise_prob_{}'.format(signal_probability_percentage)
             if TILECAL:
-                file_helper.save_file('tile-' + base_file_name, folder_name, data)
+                file_helper.save_file('tile_' + base_file_name, folder_name, data)
             else:
                 file_helper.save_file(base_file_name, folder_name, data)
         else:

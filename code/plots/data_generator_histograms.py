@@ -8,8 +8,18 @@ DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
     num_events = 1000
-    matlab_data = np.loadtxt(DIR_PATH + '/../results/mathlab/{}ruidoTileOcup100.txt'.format(num_events))
-    script_data = np.loadtxt(DIR_PATH + '/../results/noises/{}-events/TileNoiseProbability100.txt'.format(num_events))
+
+    # Noises
+    matlab_data = np.loadtxt(DIR_PATH + '/../matlab_code/results/matlabNoises/{}ruidoTileOcup0.txt'.format(num_events))
+    script_data = np.loadtxt(DIR_PATH + '/../results/pileup_data/prob-0.0/{}-events/tile-noise-prob-0.0.txt'.format(num_events))
+
+    # Signals
+    # matlab_data = np.loadtxt(DIR_PATH + '/../matlab_code/results/matlabSignals/{}dadosTileOcup0.txt'.format(num_events))
+    # script_data = np.loadtxt(DIR_PATH + '/../results/pileup_data/prob-0.0/{}-events/tile-signal-prob-0.0.txt'.format(num_events))
+
+    # Amplitude
+    # matlab_data = np.loadtxt(DIR_PATH + '/../matlab_code/results/matlabSignals/{}dadosTileOcup0-A.txt'.format(num_events))
+    # script_data = np.loadtxt(DIR_PATH + '/../results/pileup_data/prob-0.0/{}-events/tile_A-signal-prob-0.0.txt'.format(num_events))
 
     script_data_mean = np.mean(script_data)
     script_data_std = np.std(script_data)

@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
-    num_events = 10000
+    num_events = 100000
 
-    script_data = np.loadtxt(DIR_PATH + '/../results/matched_filter/{}-events/amp_error.txt'.format(num_events))
+    script_data = np.loadtxt(DIR_PATH + '/../results/matched_filter/{}_events/amp_error.txt'.format(num_events))
 
     mu = np.mean(script_data)
     sigma = np.std(script_data)

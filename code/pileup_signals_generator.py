@@ -23,7 +23,7 @@ def _base_data(number_of_data):
     return np.random.normal(mu, sigma, number_of_data)  # Base data
 
 
-def _pileup_indexes(number_of_data):
+def _pileup_indexes(signal_probability, number_of_data):
     pu_indexes = np.random.permutation(number_of_data)
     # What about when "signal_probability" is float?
     pu_indexes = pu_indexes[0:int(signal_probability * number_of_data)]
@@ -90,7 +90,7 @@ if __name__ == '__main__':
               .format(signal_probability_percentage))
 
         x = _base_data(number_of_data)
-        pu_indexes = _pileup_indexes(number_of_data)
+        pu_indexes = _pileup_indexes(signal_probability, number_of_data)
 
         if signal_probability > 0:
             for i in range(0, int(signal_probability * number_of_data)):
@@ -107,14 +107,14 @@ if __name__ == '__main__':
 
         if is_noise:
             folder_name = 'pileup_data/prob_{}'.format(signal_probability_percentage)
-            base_file_name = 'noise-prob_{}'.format(signal_probability_percentage)
+            base_file_name = 'noise_prob_{}'.format(signal_probability_percentage)
             if TILECAL:
                 file_helper.save_file('tile-' + base_file_name, folder_name, data)
             else:
                 file_helper.save_file(base_file_name, folder_name, data)
         else:
             folder_name = 'pileup_data/prob_{}'.format(signal_probability_percentage)
-            base_file_name = 'signal-prob_{}'.format(signal_probability_percentage)
+            base_file_name = 'signal_prob_{}'.format(signal_probability_percentage)
             A = np.zeros(number_of_events)  # Amplitude
             for i in range(0, number_of_events):
                 A[i] = np.random.exponential(signal_mean)  # Simulating true Amplitude
@@ -127,9 +127,9 @@ if __name__ == '__main__':
                     data[i, :] = data[i, :] + np.multiply(A[i], pulse_helper.get_pulse_paper_COF())
 
             if TILECAL:
-                file_helper.save_file('tile-' + base_file_name, folder_name, data)
-                file_helper.save_file('tile_A-' + base_file_name, folder_name, A)
+                file_helper.save_file('tile_' + base_file_name, folder_name, data)
+                file_helper.save_file('tile_A_' + base_file_name, folder_name, A)
             else:
                 file_helper.save_file(base_file_name, folder_name, data)
-                file_helper.save_file('A-' + base_file_name, folder_name, A)
+                file_helper.save_file('A_' + base_file_name, folder_name, A)
         level += 1

@@ -7,19 +7,19 @@ import matplotlib.pyplot as plt
 DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
-    num_events = 1000
-
-    # Noises
-    matlab_data = np.loadtxt(DIR_PATH + '/../matlab_code/results/matlabNoises/{}ruidoTileOcup0.txt'.format(num_events))
-    script_data = np.loadtxt(DIR_PATH + '/../results/pileup_data/prob-0.0/{}-events/tile-noise-prob-0.0.txt'.format(num_events))
+    num_events = 10000
 
     # Signals
-    # matlab_data = np.loadtxt(DIR_PATH + '/../matlab_code/results/matlabSignals/{}dadosTileOcup0.txt'.format(num_events))
-    # script_data = np.loadtxt(DIR_PATH + '/../results/pileup_data/prob-0.0/{}-events/tile-signal-prob-0.0.txt'.format(num_events))
+    matlab_data = np.loadtxt(DIR_PATH + '/../matlab_code/results/matlabSignals/{}dadosTileOcup50.txt'.format(num_events))
+    script_data = np.loadtxt(DIR_PATH + '/../results/pileup_data/prob_50.0/{}_events/tile_signal_prob_50.0.txt'.format(num_events))
+
+    # Noises
+    # matlab_data = np.loadtxt(DIR_PATH + '/../matlab_code/results/matlabNoises/{}ruidoTileOcup0.txt'.format(num_events))
+    # script_data = np.loadtxt(DIR_PATH + '/../results/pileup_data/prob_0.0/{}_events/tile_noise_prob_0.0.txt'.format(num_events))
 
     # Amplitude
     # matlab_data = np.loadtxt(DIR_PATH + '/../matlab_code/results/matlabSignals/{}dadosTileOcup0-A.txt'.format(num_events))
-    # script_data = np.loadtxt(DIR_PATH + '/../results/pileup_data/prob-0.0/{}-events/tile_A-signal-prob-0.0.txt'.format(num_events))
+    # script_data = np.loadtxt(DIR_PATH + '/../results/pileup_data/prob_0.0/{}_events/tile_A_signal_prob_0.0.txt'.format(num_events))
 
     script_data_mean = np.mean(script_data)
     script_data_std = np.std(script_data)
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     ax0.hist(matlab_data, bins="auto", density=True, histtype='bar')
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
-    ax0.set_title('Matlab Script Noise \n Mean: {:.5f} \n STD: {:.5f}'
+    ax0.set_title('Matlab Script Sinal \n' r'$\mu={}$, $\sigma={}$'
                   .format(matlab_data_mean, matlab_data_std))
 
     ax0.set_xlim(0, 1100)
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     ax1.hist(script_data, bins="auto", density=True, histtype='bar')
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
-    ax1.set_title('Python Script Noise\nMean: {:.5f}\nSTD: {:.5f}'
+    ax1.set_title('Python Script - Sinal \n' r'$\mu={}$, $\sigma={}$'
                   .format(script_data_mean, script_data_std))
     ax1.set_xlim(0, 1100)
     ax1.set_ylim(0, 0.005)

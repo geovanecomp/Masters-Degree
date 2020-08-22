@@ -16,8 +16,8 @@ if __name__ == '__main__':
     qtd_for_training = 10000
     qtd_for_testing = number_of_data - qtd_for_training
 
-    amplitude = pd.read_csv('results/base_data/{}-events/amplitude.txt'.format(qtd_for_training), sep=" ", header=None)
-    signal_testing = pd.read_csv('results/base_data/{}-events/signal_testing.txt'.format(qtd_for_training), sep=" ", header=None)
+    amplitude = pd.read_csv('results/base_data/{}_events/amplitude.txt'.format(qtd_for_training), sep=" ", header=None)
+    signal_testing = pd.read_csv('results/base_data/{}_events/signal_testing.txt'.format(qtd_for_training), sep=" ", header=None)
 
     noise = pd.DataFrame(pedestal + np.random.randn(number_of_data, dimension))
     # Getting data from boundaries

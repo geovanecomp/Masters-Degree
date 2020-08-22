@@ -5,12 +5,12 @@ import numpy as np
 from utils import file_helper, pulse_helper
 
 TILECAL = 1
-NUMBER_OF_CELLS = 1
+
 # Represents all possible probabilities of the cell receive signals
 # Example: 0.5 equals 50% of chance of receiving a signal in a collision.
 # We can use an array to generate signas for several probabilities.
-# signal_probabilities = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
-signal_probabilities = [1.0]
+signal_probabilities = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+# signal_probabilities = [0.0]
 
 
 def _number_of_samples_based_on(TILECAL):
@@ -74,19 +74,21 @@ def _apply_pileup_indexes(i, pu_indexes, x):
 
 if __name__ == '__main__':
     # Creating the dataset.
-    number_of_events = 10000
+    number_of_events = 100000
     number_of_samples = _number_of_samples_based_on(TILECAL)
     number_of_data = number_of_samples * number_of_events
 
     # Control when generate noise or signal
-    is_noise = 1
+    is_noise = 0
 
     for level in range(0, len(signal_probabilities)):
-        print('Processing signal probability:  {0:2.6f}%\n'
-              .format(signal_probabilities[level]) * 100)
-
         signal_probability = signal_probabilities[level]  # Signal_probability
+        signal_probability_percentage = signal_probability * 100
         signal_mean = 300  # Exponential signal mean
+
+        print('Processing signal probability:  {0:2.6f}%\n'
+              .format(signal_probability_percentage))
+
         x = _base_data(number_of_data)
         pu_indexes = _pileup_indexes(number_of_data)
 
@@ -103,19 +105,19 @@ if __name__ == '__main__':
         data = np.reshape(x, (number_of_samples, number_of_events))
         data = np.transpose(data)
 
-        # Auxiliary file info
-        dataMean = np.mean(data, axis=0)
-        dataStd = np.std(data, axis=0)
-
         if is_noise:
+            folder_name = 'pileup_data/prob-{}'.format(signal_probability_percentage)
+            base_file_name = 'noise-prob-{}'.format(signal_probability_percentage)
             if TILECAL:
-                file_helper.save_tile_noise(signal_probability, data, dataMean, dataStd)
+                file_helper.save_file('tile-' + base_file_name, folder_name, data)
             else:
-                file_helper.save_noise(signal_probability, data, dataMean, dataStd)
+                file_helper.save_file(base_file_name, folder_name, data)
         else:
+            folder_name = 'pileup_data/prob-{}'.format(signal_probability_percentage)
+            base_file_name = 'signal-prob-{}'.format(signal_probability_percentage)
             A = np.zeros(number_of_events)  # Amplitude
             for i in range(0, number_of_events):
-                A[i] = np.random.exponential(signal_mean) # Simulating true Amplitude
+                A[i] = np.random.exponential(signal_mean)  # Simulating true Amplitude
 
                 if TILECAL:
                     data[i, :] = data[i, :] + np.multiply(A[i], pulse_helper.get_jitter_pulse())
@@ -125,6 +127,9 @@ if __name__ == '__main__':
                     data[i, :] = data[i, :] + np.multiply(A[i], pulse_helper.get_pulse_paper_COF())
 
             if TILECAL:
-                file_helper.save_tile_data(signal_probability, data, dataMean, dataStd, A)
+                file_helper.save_file('tile-' + base_file_name, folder_name, data)
+                file_helper.save_file('tile_A-' + base_file_name, folder_name, A)
             else:
-                file_helper.save_data(signal_probability, data, dataMean, dataStd, A)
+                file_helper.save_file(base_file_name, folder_name, data)
+                file_helper.save_file('A-' + base_file_name, folder_name, A)
+        level += 1

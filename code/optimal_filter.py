@@ -54,10 +54,21 @@ def of_weights():
 
 
 if __name__ == '__main__':
+    prob = 100.0
     num_events = 10000
+    result_prefix = ''
 
-    amplitude = pd.read_csv('results/base_data/{}-events/amplitude.txt'.format(num_events), sep=" ", header=None)
-    signal_testing = pd.read_csv('results/base_data/{}-events/signal_testing.txt'.format(num_events), sep=" ", header=None)
+    # Normal data
+    # amplitude_file_name = 'results/base_data/{}_events/amplitude.txt'.format(num_events)
+    # signal_testing_file_name = 'results/base_data/{}_events/signal_testing.txt'.format(num_events)
+
+    # Pileup data
+    amplitude_file_name = 'results/pileup_data/prob_{}/{}_events/tile_A_signal_prob_{}.txt'.format(prob, num_events, prob)
+    signal_testing_file_name = 'results/pileup_data/prob_{}/{}_events/tile_signal_prob_{}.txt'.format(prob, num_events, prob)
+    result_prefix = 'new_pileup_prob_{}_'.format(prob)
+
+    amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)
+    signal_testing = pd.read_csv(signal_testing_file_name, sep=" ", header=None)
 
     weights = pd.DataFrame([-0.37873481, -0.35634348, 0.17828771, 0.81313877, 0.27867064, -0.20540129, -0.32961754])
 
@@ -67,5 +78,8 @@ if __name__ == '__main__':
     of_amplitude = signal_testing.dot(weights)
     amp_error = amplitude - of_amplitude
 
-    file_helper.save_file('of_amplitude', 'optimal_filter', of_amplitude)
-    file_helper.save_file('amp_error', 'optimal_filter', amp_error)
+    folder_name = 'optimal_filter'
+    of_amp_file_name = result_prefix + 'of_amplitude'
+    of_amp_error_file_name = result_prefix + 'of_amp_error'
+    file_helper.save_file(of_amp_file_name, folder_name, of_amplitude)
+    file_helper.save_file(of_amp_error_file_name, folder_name, amp_error)

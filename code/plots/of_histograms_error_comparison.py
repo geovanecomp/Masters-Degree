@@ -1,14 +1,13 @@
 """Compares OF Amplitude against OF Error (OF Amplitude - Amplitude)."""
 
 import os.path
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
 DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
-    prob = 0.0
+    prob = 100.0
     num_events = 10000
 
     # Normal data

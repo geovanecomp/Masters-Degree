@@ -79,7 +79,7 @@ if __name__ == '__main__':
     number_of_data = number_of_samples * number_of_events
 
     # Control when generate noise or signal
-    is_noise = 0
+    is_noise = 1
 
     for level in range(0, len(signal_probabilities)):
         signal_probability = signal_probabilities[level]  # Signal_probability

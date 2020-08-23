@@ -8,7 +8,7 @@ if __name__ == '__main__':
     TEN_BITS_ADC_VALUE = 1023
     pedestal = 0
     dimension = 7
-    number_of_data = 100000
+    number_of_data = 1000000
 
     print('Generating Data for {} signals'.format(number_of_data))
 

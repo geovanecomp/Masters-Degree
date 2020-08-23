@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     # Pile data
     amplitude_file_name = DIR_PATH + '/../results/pileup_data/prob_{}/{}_events/tile_A_signal_prob_{}.txt'.format(prob, num_events, prob)
-    mf_amplitude_file_name = DIR_PATH + '/../results/matched_filter/{}_events/gege_pileup_prob_{}_amp_signal.txt'.format(num_events, prob)
+    mf_amplitude_file_name = DIR_PATH + '/../results/matched_filter/{}_events/pileup_prob_{}_amp_signal.txt'.format(num_events, prob)
 
     amplitude = np.loadtxt(amplitude_file_name)
     mf_amplitude = np.loadtxt(mf_amplitude_file_name)

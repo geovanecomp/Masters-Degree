@@ -15,9 +15,19 @@ if __name__ == '__main__':
     number_of_data = 20000
     qtd_for_training = 10000
     qtd_for_testing = number_of_data - qtd_for_training
+    prob = 100.0
 
-    amplitude = pd.read_csv('results/base_data/{}_events/amplitude.txt'.format(qtd_for_training), sep=" ", header=None)
-    signal_testing = pd.read_csv('results/base_data/{}_events/signal_testing.txt'.format(qtd_for_training), sep=" ", header=None)
+    # Normal data
+    # amplitude_file_name = 'results/base_data/{}_events/amplitude.txt'.format(qtd_for_training)
+    # signal_testing_file_name = 'results/base_data/{}_events/signal_testing.txt'.format(qtd_for_training)
+
+    # Pileup data
+    amplitude_file_name = 'results/pileup_data/prob_{}/{}_events/tile_A_signal_prob_{}.txt'.format(prob, qtd_for_training, prob)
+    signal_testing_file_name = 'results/pileup_data/prob_{}/{}_events/tile_signal_prob_{}.txt'.format(prob, qtd_for_training, prob)
+    result_prefix = 'pileup_prob_{}_'.format(prob)
+
+    amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)
+    signal_testing = pd.read_csv(signal_testing_file_name, sep=" ", header=None)
 
     noise = pd.DataFrame(pedestal + np.random.randn(number_of_data, dimension))
     # Getting data from boundaries
@@ -151,8 +161,8 @@ if __name__ == '__main__':
     amp_signal = pd.DataFrame(amp_signal)
     amp_error = amp_signal.values - amplitude.values
 
-    file_helper.save_file('amp_signal', 'matched_filter', amp_signal)
-    file_helper.save_file('amp_noise', 'matched_filter', amp_noise)
-    file_helper.save_file('amp_error', 'matched_filter', amp_error)
+    file_helper.save_file(result_prefix + 'amp_signal', 'matched_filter', amp_signal)
+    file_helper.save_file(result_prefix + 'amp_noise', 'matched_filter', amp_noise)
+    file_helper.save_file(result_prefix + 'amp_error', 'matched_filter', amp_error)
 
     print('Finished!')

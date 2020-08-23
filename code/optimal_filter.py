@@ -65,7 +65,7 @@ if __name__ == '__main__':
     # Pileup data
     amplitude_file_name = 'results/pileup_data/prob_{}/{}_events/tile_A_signal_prob_{}.txt'.format(prob, num_events, prob)
     signal_testing_file_name = 'results/pileup_data/prob_{}/{}_events/tile_signal_prob_{}.txt'.format(prob, num_events, prob)
-    result_prefix = 'new_pileup_prob_{}_'.format(prob)
+    result_prefix = 'pileup_prob_{}_'.format(prob)
 
     amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)
     signal_testing = pd.read_csv(signal_testing_file_name, sep=" ", header=None)

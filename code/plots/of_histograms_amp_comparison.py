@@ -1,4 +1,4 @@
-"""Compares MF Amplitude against True Amplitude"""
+"""Compares OF Amplitude against True Amplitude"""
 
 import os.path
 import numpy as np

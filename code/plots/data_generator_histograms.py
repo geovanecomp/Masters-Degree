@@ -33,7 +33,7 @@ if __name__ == '__main__':
     ax0.hist(matlab_data, bins="auto", density=True, histtype='bar')
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
-    ax0.set_title('Matlab Script Sinal \n' r'$\mu={}$, $\sigma={}$'
+    ax0.set_title('Matlab: Sinal \n' r'$\mu={}$, $\sigma={}$'
                   .format(matlab_data_mean, matlab_data_std))
 
     ax0.set_xlim(0, 1100)
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     ax1.hist(script_data, bins="auto", density=True, histtype='bar')
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
-    ax1.set_title('Python Script - Sinal \n' r'$\mu={}$, $\sigma={}$'
+    ax1.set_title('Python: Sinal \n' r'$\mu={}$, $\sigma={}$'
                   .format(script_data_mean, script_data_std))
     ax1.set_xlim(0, 1100)
     ax1.set_ylim(0, 0.005)

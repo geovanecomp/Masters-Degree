@@ -1,4 +1,4 @@
-"""Compares OF Amplitude against OF Error (OF Amplitude - Amplitude)."""
+"""Compares MF Amplitude against its Amplitude error"""
 
 import os.path
 import numpy as np

@@ -1,4 +1,4 @@
-"""Compares MF Amplitude against True Amplitude"""
+"""Compares MF Amplitude against its Amplitude error"""
 
 import os.path
 import numpy as np

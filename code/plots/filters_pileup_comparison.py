@@ -17,7 +17,7 @@ if __name__ == '__main__':
     mf_means = []
     for prob in probs:
         of_error_file_name = DIR_PATH + '/../results/optimal_filter/{}_events/pileup_prob_{}_of_amp_error.txt'.format(num_events, prob)
-        mf_error_file_name = DIR_PATH + '/../results/matched_filter/{}_events/pileup_prob_{}_amp_signal.txt'.format(num_events, prob)
+        mf_error_file_name = DIR_PATH + '/../results/matched_filter/{}_events/pileup_prob_{}_amp_error.txt'.format(num_events, prob)
         of_error = np.loadtxt(of_error_file_name)
         mf_error = np.loadtxt(mf_error_file_name)
 

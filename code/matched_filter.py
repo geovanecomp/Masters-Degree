@@ -8,14 +8,12 @@ from utils import pulse_helper, file_helper
 
 np.set_printoptions(suppress=True)
 
-if __name__ == '__main__':
+
+def mf_calculation(number_of_data, pedestal, probs, training_percentage=50):
     TEN_BITS_ADC_VALUE = 1023
-    pedestal = 0
     dimension = 7
-    number_of_data = 20000
-    qtd_for_training = 10000
+    qtd_for_training = int(number_of_data / ((100 / training_percentage)))
     qtd_for_testing = number_of_data - qtd_for_training
-    probs = [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
 
     for prob in probs:
         print('Processing signal probability:  {}%\n'.format(prob))
@@ -168,3 +166,11 @@ if __name__ == '__main__':
         file_helper.save_file(result_prefix + 'amp_error', 'matched_filter', amp_error)
 
         print('Finished!')
+
+
+if __name__ == '__main__':
+    number_of_data = 2000
+    pedestal = 30
+    probs = [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
+
+    mf_calculation(number_of_data, pedestal, probs, training_percentage=50)

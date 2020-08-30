@@ -6,12 +6,6 @@ from utils import file_helper, pulse_helper
 
 TILECAL = 1
 
-# Represents all possible probabilities of the cell receive signals
-# Example: 0.5 equals 50% of chance of receiving a signal in a collision.
-# We can use an array to generate signas for several probabilities.
-signal_probabilities = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-# signal_probabilities = [0.0]
-
 
 def _number_of_samples_based_on(TILECAL):
     return 7 if TILECAL else 10
@@ -72,21 +66,16 @@ def _apply_pileup_indexes(i, pu_indexes, x):
     return x
 
 
-if __name__ == '__main__':
-    # Creating the dataset.
-    number_of_events = 10000
+def pu_generator(number_of_events, signal_probabilities, is_noise=False):
     number_of_samples = _number_of_samples_based_on(TILECAL)
     number_of_data = number_of_samples * number_of_events
-
-    # Control when generate noise or signal
-    is_noise = 1
 
     for level in range(0, len(signal_probabilities)):
         signal_probability = signal_probabilities[level]  # Signal_probability
         signal_probability_percentage = signal_probability * 100
         signal_mean = 300  # Exponential signal mean
 
-        print('Processing signal probability:  {0:2.6f}%\n'
+        print('PU Generator - Processing signal probability:  {0:2.6f}%\n'
               .format(signal_probability_percentage))
 
         x = _base_data(number_of_data)
@@ -133,3 +122,14 @@ if __name__ == '__main__':
                 file_helper.save_file(base_file_name, folder_name, data)
                 file_helper.save_file('A_' + base_file_name, folder_name, A)
         level += 1
+
+
+if __name__ == '__main__':
+    # Represents all possible probabilities of the cell receive signals
+    # Example: 0.5 equals 50% of chance of receiving a signal in a collision.
+    # We can use an array to generate signas for several probabilities.
+    # signal_probabilities = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    signal_probabilities = [0.0]
+    number_of_events = 100
+
+    pu_generator(number_of_events, signal_probabilities)

@@ -15,8 +15,11 @@ def mf_calculation(number_of_data, pedestal, probs, training_percentage=50):
     qtd_for_training = int(number_of_data / ((100 / training_percentage)))
     qtd_for_testing = number_of_data - qtd_for_training
 
+    # For printing and files, probability must be in %.
+    probs = np.array(probs) * 100
     for prob in probs:
-        print('Processing signal probability:  {}%\n'.format(prob))
+        prob = prob
+        print('MF - Processing signal probability:  {}%\n'.format(prob))
         # Normal data
         # amplitude_file_name = 'results/base_data/{}_events/amplitude.txt'.format(qtd_for_training)
         # signal_testing_file_name = 'results/base_data/{}_events/signal_testing.txt'.format(qtd_for_training)
@@ -169,8 +172,8 @@ def mf_calculation(number_of_data, pedestal, probs, training_percentage=50):
 
 
 if __name__ == '__main__':
-    number_of_data = 2000
+    number_of_data = 20000
     pedestal = 30
-    probs = [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
-
+    probs = [0.0]
+    # probs = [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
     mf_calculation(number_of_data, pedestal, probs, training_percentage=50)

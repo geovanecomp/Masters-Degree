@@ -53,15 +53,13 @@ def of_weights():
     return weights
 
 
-if __name__ == '__main__':
-    prob = 100.0
-    num_events = 10000
+def of_calculation(num_events, probs):
     result_prefix = ''
-
-    probs = [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
-
+    # For printing and files, probability must be in %.
+    probs = np.array(probs) * 100
+    
     for prob in probs:
-        print('Processing signal probability:  {}%\n'.format(prob))
+        print('OF - Processing signal probability:  {}%\n'.format(prob))
 
         # Normal data
         # amplitude_file_name = 'results/base_data/{}_events/amplitude.txt'.format(num_events)
@@ -88,3 +86,10 @@ if __name__ == '__main__':
         of_amp_error_file_name = result_prefix + 'of_amp_error'
         file_helper.save_file(of_amp_file_name, folder_name, of_amplitude)
         file_helper.save_file(of_amp_error_file_name, folder_name, amp_error)
+
+
+if __name__ == '__main__':
+    num_events = 10000
+    probs = [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
+
+    of_calculation(num_events, probs)

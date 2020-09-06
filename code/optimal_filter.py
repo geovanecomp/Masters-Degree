@@ -57,7 +57,7 @@ def of_calculation(num_events, probs):
     result_prefix = ''
     # For printing and files, probability must be in %.
     probs = np.array(probs) * 100
-    
+
     for prob in probs:
         print('OF - Processing signal probability:  {}%\n'.format(prob))
 
@@ -90,6 +90,6 @@ def of_calculation(num_events, probs):
 
 if __name__ == '__main__':
     num_events = 10000
-    probs = [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
+    probs = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
     of_calculation(num_events, probs)

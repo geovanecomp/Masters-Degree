@@ -174,6 +174,6 @@ def mf_calculation(number_of_data, pedestal, probs, training_percentage=50):
 if __name__ == '__main__':
     number_of_data = 20000
     pedestal = 30
-    probs = [0.0]
-    # probs = [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
+    # probs = [0.0]
+    probs = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     mf_calculation(number_of_data, pedestal, probs, training_percentage=50)

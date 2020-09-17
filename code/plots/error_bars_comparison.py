@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """Compares OF and MF STD and mean."""
 
 import os.path
@@ -51,15 +53,18 @@ if __name__ == '__main__':
     print(len(of_means_std))
 
     fig, ((ax0, ax1)) = plt.subplots(nrows=1, ncols=2)
+    font = {
+            'family': 'Times New Roman',
+            'size': 16
+            }
 
-    fig.suptitle('OF X MF' ' {} eventos'
+    fig.suptitle('OF X MF' ' {} eventos\n A=300, PU=100'
                  .format(num_events))
 
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
-    ax0.set_title('Média')
-    ax0.set_xlabel('Empilhamento (%)')
-    ax0.set_ylabel('Média')
+    ax0.set_xlabel('Ocupação (%)', **font)
+    ax0.set_ylabel('Média', **font)
     ax0.errorbar(probs, of_means_mean, c='r', yerr=of_means_std, label='DP-OF',ls='None')
     ax0.plot(probs, of_means_mean, 'ro', label='OF')
     ax0.errorbar(probs, mf_means_mean, c='b', yerr=mf_means_std, label='DP-MF',ls='None')
@@ -68,9 +73,8 @@ if __name__ == '__main__':
 
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
-    ax1.set_title('Desvio Padrão')
-    ax1.set_xlabel('Empilhamento (%)')
-    ax1.set_ylabel('Desvio Padrão')
+    ax1.set_xlabel('Ocupação (%)', **font)
+    ax1.set_ylabel('RMS', **font)
     ax1.errorbar(probs, of_stds_mean, c='r', yerr=of_stds_std, label='DP-OF', ls='None')
     ax1.plot(probs, of_stds_mean, 'ro', label='OF')
     ax1.errorbar(probs, mf_stds_mean, c='b', yerr=mf_stds_std, label='DP-MF', ls='None')
@@ -78,24 +82,3 @@ if __name__ == '__main__':
     ax1.legend(loc='upper left',)
 
     plt.show()
-
-    # fig = plt.figure()
-    # x = np.arange(10)
-    # y = 2.5 * np.sin(x / 20 * np.pi)
-    # yerr = np.linspace(0.05, 0.2, 10)
-    #
-    # plt.errorbar(x, y + 3, yerr=yerr, label='both limits (default)')
-    #
-    # plt.errorbar(x, y + 2, yerr=yerr, uplims=True, label='uplims=True')
-    #
-    # plt.errorbar(x, y + 1, yerr=yerr, uplims=True, lolims=True,
-    #              label='uplims=True, lolims=True')
-    #
-    # upperlimits = [True, False] * 5
-    # lowerlimits = [False, True] * 5
-    # plt.errorbar(x, y, yerr=yerr, uplims=upperlimits, lolims=lowerlimits,
-    #              label='subsets of uplims and lolims')
-    #
-    # plt.legend(loc='lower right')
-    #
-    # plt.show()

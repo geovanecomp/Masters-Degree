@@ -128,8 +128,8 @@ if __name__ == '__main__':
     # Represents all possible probabilities of the cell receive signals
     # Example: 0.5 equals 50% of chance of receiving a signal in a collision.
     # We can use an array to generate signas for several probabilities.
-    # signal_probabilities = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    signal_probabilities = [0.0]
-    number_of_events = 100
+    signal_probabilities = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    # signal_probabilities = [0.0]
+    number_of_events = 10000
 
-    pu_generator(number_of_events, signal_probabilities)
+    pu_generator(number_of_events, signal_probabilities, is_noise=True)

@@ -6,6 +6,9 @@ import os.path
 import numpy as np
 import matplotlib.pyplot as plt
 
+plt.rcParams['xtick.labelsize'] = 22
+plt.rcParams['ytick.labelsize'] = 22
+
 DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
@@ -48,37 +51,29 @@ if __name__ == '__main__':
         mf_stds_mean.append(np.mean(mf_stds))
         mf_stds_std.append(np.std(mf_stds))
 
-    print(len(probs))
-    print(len(of_means_mean))
-    print(len(of_means_std))
-
     fig, ((ax0, ax1)) = plt.subplots(nrows=1, ncols=2)
     font = {
             'family': 'Times New Roman',
-            'size': 16
+            'size': 22
             }
 
-    fig.suptitle('OF X MF' ' {} eventos\n A=300, PU=100'
-                 .format(num_events))
+    # fig.suptitle('OF X MF' ' {} eventos\n A=300, PU=100'
+    #              .format(num_events))
 
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
     ax0.set_xlabel('Ocupação (%)', **font)
     ax0.set_ylabel('Média', **font)
-    ax0.errorbar(probs, of_means_mean, c='r', yerr=of_means_std, label='DP-OF',ls='None')
-    ax0.plot(probs, of_means_mean, 'ro', label='OF')
-    ax0.errorbar(probs, mf_means_mean, c='b', yerr=mf_means_std, label='DP-MF',ls='None')
-    ax0.plot(probs, mf_means_mean, 'bo', label='MF')
-    ax0.legend(loc='upper left',)
+    ax0.errorbar(probs, of_means_mean, c='k', marker='o', yerr=of_means_std, label='DP-OF',ls='None')
+    ax0.errorbar(probs, mf_means_mean, c='k', marker='s', yerr=mf_means_std, label='DP-MF',ls='None')
+    ax0.legend(loc='upper left', fontsize=21)
 
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
     ax1.set_xlabel('Ocupação (%)', **font)
     ax1.set_ylabel('RMS', **font)
-    ax1.errorbar(probs, of_stds_mean, c='r', yerr=of_stds_std, label='DP-OF', ls='None')
-    ax1.plot(probs, of_stds_mean, 'ro', label='OF')
-    ax1.errorbar(probs, mf_stds_mean, c='b', yerr=mf_stds_std, label='DP-MF', ls='None')
-    ax1.plot(probs, mf_stds_mean, 'bo', label='MF')
-    ax1.legend(loc='upper left',)
+    ax1.errorbar(probs, of_stds_mean, c='k', marker='o', yerr=of_stds_std, label='DP-OF', ls='None')
+    ax1.errorbar(probs, mf_stds_mean, c='k', marker='s', yerr=mf_stds_std, label='DP-MF', ls='None')
+    ax1.legend(loc='upper left', fontsize=21)
 
     plt.show()

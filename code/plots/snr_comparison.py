@@ -6,7 +6,11 @@ import os.path
 import numpy as np
 import matplotlib.pyplot as plt
 
+plt.rcParams['xtick.labelsize'] = 22
+plt.rcParams['ytick.labelsize'] = 22
+
 DIR_PATH = os.path.dirname(__file__)
+
 
 if __name__ == '__main__':
     num_runs = 10
@@ -54,7 +58,7 @@ if __name__ == '__main__':
     fig, ((ax0, ax1)) = plt.subplots(nrows=1, ncols=2)
     font = {
             'family': 'Times New Roman',
-            'size': 16
+            'size': 22
             }
 
     # fig.suptitle('OF X MF' ' {} eventos\n A=300, PU=100'
@@ -62,22 +66,18 @@ if __name__ == '__main__':
 
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
-    ax0.set_xlabel('Amplitude', **font)
+    ax0.set_xlabel('SNRp', **font)
     ax0.set_ylabel('Média', **font)
-    ax0.errorbar(amplitudes, of_means_mean, c='r', yerr=of_means_std, label='DP-OF',ls='None')
-    ax0.plot(amplitudes, of_means_mean, 'ro', label='OF')
-    ax0.errorbar(amplitudes, mf_means_mean, c='b', yerr=mf_means_std, label='DP-MF',ls='None')
-    ax0.plot(amplitudes, mf_means_mean, 'bo', label='MF')
-    ax0.legend(loc='center left',)
+    ax0.errorbar(amplitudes, of_means_mean, c='k', marker='o', yerr=of_means_std, label='DP-OF',ls='None')
+    ax0.errorbar(amplitudes, mf_means_mean, c='k', marker='s', yerr=mf_means_std, label='DP-MF',ls='None')
+    ax0.legend(loc='center left', fontsize=21)
 
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
-    ax1.set_xlabel('Amplitude', **font)
+    ax1.set_xlabel('SNRp', **font)
     ax1.set_ylabel('RMS', **font)
-    ax1.errorbar(amplitudes, of_stds_mean, c='r', yerr=of_stds_std, label='DP-OF', ls='None')
-    ax1.plot(amplitudes, of_stds_mean, 'ro', label='OF')
-    ax1.errorbar(amplitudes, mf_stds_mean, c='b', yerr=mf_stds_std, label='DP-MF', ls='None')
-    ax1.plot(amplitudes, mf_stds_mean, 'bo', label='MF')
-    ax1.legend(loc='center left',)
+    ax1.errorbar(amplitudes, of_stds_mean, c='k', marker='o', yerr=of_stds_std, label='DP-OF', ls='None')
+    ax1.errorbar(amplitudes, mf_stds_mean, c='k', marker='s', yerr=mf_stds_std, label='DP-MF', ls='None')
+    ax1.legend(loc='center left', fontsize=21)
 
     plt.show()

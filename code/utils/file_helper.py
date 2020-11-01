@@ -12,3 +12,14 @@ def save_file(file_name, file_folder, data):
         data,
         fmt='%.13f',
         delimiter=' ')
+
+
+def save_file_in(file_name, file_folder, data):
+    fileText = 'results/{}/{}.txt' \
+               .format(file_folder, file_name)
+
+    np.savetxt(
+        fileText,
+        data,
+        fmt='%.13f',
+        delimiter=' ')

@@ -12,8 +12,8 @@ def _number_of_samples_based_on(TILECAL):
 
 
 # Generates a base data that will be randomized to simulate the real signal
-def _base_data(number_of_data):
-    mu, sigma = 30, 1.5  # Mean and standard deviation
+def _base_data(number_of_data, pedestal):
+    mu, sigma = pedestal, 1.5  # Mean and standard deviation
     return np.random.normal(mu, sigma, number_of_data)  # Base data
 
 
@@ -66,7 +66,7 @@ def _apply_pileup_indexes(i, pu_indexes, x):
     return x
 
 
-def pu_generator(number_of_events, signal_probabilities, is_noise=False):
+def pu_generator(number_of_events, signal_probabilities, pedestal, is_noise=False):
     number_of_samples = _number_of_samples_based_on(TILECAL)
     number_of_data = number_of_samples * number_of_events
 
@@ -78,7 +78,7 @@ def pu_generator(number_of_events, signal_probabilities, is_noise=False):
         print('PU Generator - Processing signal probability:  {0:2.6f}%\n'
               .format(signal_probability_percentage))
 
-        x = _base_data(number_of_data)
+        x = _base_data(number_of_data, pedestal)
         pu_indexes = _pileup_indexes(signal_probability, number_of_data)
 
         if signal_probability > 0:
@@ -128,8 +128,9 @@ if __name__ == '__main__':
     # Represents all possible probabilities of the cell receive signals
     # Example: 0.5 equals 50% of chance of receiving a signal in a collision.
     # We can use an array to generate signas for several probabilities.
-    signal_probabilities = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    # signal_probabilities = [0.0]
+    # signal_probabilities = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    signal_probabilities = [0.0, 0.5, 1.0]
     number_of_events = 10000
+    pedestal = 0
 
-    pu_generator(number_of_events, signal_probabilities, is_noise=True)
+    pu_generator(number_of_events, signal_probabilities, pedestal, is_noise=False)

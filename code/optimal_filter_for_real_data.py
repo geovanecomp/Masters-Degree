@@ -73,6 +73,6 @@ def of_calculation(noise_mean):
 
 
 if __name__ == '__main__':
-    noise_mean = 30
+    noise_mean = 50
 
     of_calculation(noise_mean)

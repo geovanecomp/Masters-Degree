@@ -4,7 +4,7 @@ import pandas as pd
 from scipy import linalg as LA
 from sklearn.decomposition import PCA
 
-from utils import pulse_helper, file_helper
+from utils import pulse_helper, file_helper, tilecal_helper
 
 np.set_printoptions(suppress=True)
 
@@ -167,7 +167,10 @@ def mf_calculation(noise_mean, pedestal, training_percentage=50):
 
 
 if __name__ == '__main__':
-    noise_mean = 30
-    pedestal = 0
-
+    noise_mean = 90
+    tile_partition = 'LBA'
+    module = '06'
+    channel = '45'
+    pedestal = tilecal_helper.get_ped_value(tile_partition, module, channel)
+    print(f'Using Pedestal: {pedestal}')
     mf_calculation(noise_mean, pedestal, training_percentage=50)

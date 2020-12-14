@@ -25,7 +25,8 @@ def real_signals_generator(real_noises, noise_mean):
 
 
 if __name__ == '__main__':
-    noise_mean = 50
-    real_noise_file_name = 'data/ruidoMu{}par2modALLch1_semped.txt'.format(noise_mean)
-    real_noises = pd.read_csv(real_noise_file_name, sep=" ", header=None)
+    noise_mean = 90
+    tile_partition = 'LBA'
+    real_noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}.txt'
+    real_noises = pd.read_csv(real_noise_file_name, sep=" ", usecols=(3, 4, 5 ,6, 7, 8, 9), header=None)
     real_signals_generator(real_noises, noise_mean)

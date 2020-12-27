@@ -49,6 +49,26 @@ def read_tile_data(tile_partition, noise_mean):
     return real_noise
 
 
+# The noise file contains the 3 first columns to identify: Partition, Module
+# and Channel. The remaining 7 columns are their respectives signals. The goal
+# here is to identify which pedestal should we use and apply a pre-processing
+# of removing the pedestal for each module and channel.
+def generate_partition_data_without_ped(real_noises, high_gain=1):
+    partition_pos = 0
+    module_pos = 1
+    channel_pos = 2
+
+    for i in range(len(real_noises)):
+        partition_name = _partition_mapper(real_noises[i][partition_pos])
+        module = int(real_noises[i][module_pos])
+        channel = int(real_noises[i][channel_pos])
+        pedestal = get_ped_value(partition_name, module, channel, high_gain)
+
+        real_noises[i][channel_pos+1:TILE_DIMENSION] = real_noises[i][channel_pos+1:TILE_DIMENSION] - pedestal
+
+    return real_noises
+
+
 # Each partition has 64 modules and each module has 48 channels.
 # Finally each cell has two values, one for high_gain and other for low_gain
 # High Gain is commonly used to get more expresive values, however for

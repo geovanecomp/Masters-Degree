@@ -1,23 +1,26 @@
 import numpy as np
 import pandas as pd
+import time
 
 from scipy import linalg as LA
 from sklearn.decomposition import PCA
 
-from utils import pulse_helper, file_helper, tilecal_helper
+from utils import pulse_helper, file_helper
 
 np.set_printoptions(suppress=True)
 
 
-def mf_calculation(noise_mean, pedestal, training_percentage=50):
+def mf_calculation(noise_mean, training_percentage=50):
     TEN_BITS_ADC_VALUE = 1023
-    dimension = 7
+    DIMENSION = 7
+    tile_partition = 'LBA'
 
-    print('MF - Processing signal\n')
+    print('MF - Processing signal for mean {}\n'.format(noise_mean))
 
     # Real data
-    amplitude_file_name = 'results/real_data/mu{}/tile_A.txt'.format(noise_mean)
-    signal_file_name = 'results/real_data/mu{}/tile_signal.txt'.format(noise_mean)
+    amplitude_file_name = 'results/real_data/mu{}/tile_A_small.txt'.format(noise_mean)
+    signal_file_name = 'results/real_data/mu{}/tile_signal_small.txt'.format(noise_mean)
+    real_noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}_small_no_ped.txt'
 
     amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)
     signal_testing = pd.read_csv(signal_file_name, sep=" ", header=None)
@@ -26,10 +29,11 @@ def mf_calculation(noise_mean, pedestal, training_percentage=50):
     qtd_for_training = int(number_of_data / ((100 / training_percentage)))
     qtd_for_testing = number_of_data - qtd_for_training
 
-    noise = pd.DataFrame(pedestal + np.random.randn(number_of_data, dimension))
+    real_noises = pd.read_csv(real_noise_file_name, sep=" ", usecols=(3, 4, 5 ,6, 7, 8, 9), header=None)
+
     # Getting data from boundaries
-    noise_training = noise[:qtd_for_training][:]
-    noise_testing = noise[qtd_for_testing:][:]
+    noise_training = real_noises[:qtd_for_training][:]
+    noise_testing = real_noises[qtd_for_testing:][:]
 
     # Branqueamento
     noise_train_cov = noise_training.cov()
@@ -48,13 +52,13 @@ def mf_calculation(noise_mean, pedestal, training_percentage=50):
     W_t = W.transpose()
 
     # PCA Part
-    pure_signal = np.zeros((qtd_for_testing, dimension))
+    pure_signal = np.zeros((qtd_for_testing, DIMENSION))
     for i in range(0, qtd_for_testing):
         pure_signal[i, :] = TEN_BITS_ADC_VALUE * np.random.randn(1) * pulse_helper.get_jitter_pulse()
 
     pure_signal = pd.DataFrame(pure_signal)
 
-    n_pca_components = dimension
+    n_pca_components = DIMENSION
     pca = PCA(n_components=n_pca_components)
     coeff = pd.DataFrame(pca.fit(pure_signal.dot(W_t)).components_)
     coeff_t = coeff.transpose()
@@ -68,16 +72,20 @@ def mf_calculation(noise_mean, pedestal, training_percentage=50):
 
     optimal_reference_pulse = bleached_reference_pulse.dot(coeff_t[:][:n_pca_components])
 
-    optimal_noise = ((noise_testing - pedestal).dot(W_t)).dot(coeff_t[:][:n_pca_components])
-    optimal_signal = ((signal_testing - pedestal).dot(W_t)).dot(coeff_t[:][:n_pca_components])
+    # Temporary code considering pedestal.
+    # optimal_noise = ((noise_testing - pedestal).dot(W_t)).dot(coeff_t[:][:n_pca_components])
+    # optimal_signal = ((signal_testing - pedestal).dot(W_t)).dot(coeff_t[:][:n_pca_components])
+
+    optimal_noise = (noise_testing.dot(W_t)).dot(coeff_t[:][:n_pca_components])
+    optimal_signal = (signal_testing.dot(W_t)).dot(coeff_t[:][:n_pca_components])
 
     No = variance * 2
-    h1 = np.zeros((dimension, dimension))
-    h2 = np.zeros((dimension, dimension))
+    h1 = np.zeros((DIMENSION, DIMENSION))
+    h2 = np.zeros((DIMENSION, DIMENSION))
 
     for i in range(0, n_pca_components):
-        h1 = h1 + (Y[i] / (Y[i] + variance)) * (coeff_t[:][i].values.reshape(1, dimension) * coeff_t[:][i].values.reshape(dimension, 1))
-        h2 = h2 + (1.0 / (Y[i] + variance)) * (coeff_t[:][i].values.reshape(1, dimension) * coeff_t[:][i].values.reshape(dimension, 1))
+        h1 = h1 + (Y[i] / (Y[i] + variance)) * (coeff_t[:][i].values.reshape(1, DIMENSION) * coeff_t[:][i].values.reshape(DIMENSION, 1))
+        h2 = h2 + (1.0 / (Y[i] + variance)) * (coeff_t[:][i].values.reshape(1, DIMENSION) * coeff_t[:][i].values.reshape(DIMENSION, 1))
 
     IR_noise = np.zeros((len(noise_testing), 1))
     IR_signal = np.zeros((len(signal_testing), 1))
@@ -120,14 +128,15 @@ def mf_calculation(noise_mean, pedestal, training_percentage=50):
     estimated_signal = ID_signal + IR_signal
     print('Almost...\n')
 
+    # TODO: These variables are not being used - Investigate
     # Amplitude estimative
-    b1 = coeff[:][:n_pca_components].transpose().dot(coeff_t[:][:n_pca_components])
-    # DAQUI PARA BAIXO B2 E B3 NAO BATEM DEVIDO A ALGUMAS LINHAS DE COEFF
-    b2 = (1.0 / No) * (
-        coeff_t[:][:n_pca_components].transpose().dot(h1)
-        .dot(coeff[:][:n_pca_components])
-    )
-    b3 = (optimal_reference_pulse.dot(coeff[:][:n_pca_components])).dot(h2).dot(coeff[:][:n_pca_components])
+    # b1 = coeff[:][:n_pca_components].transpose().dot(coeff_t[:][:n_pca_components])
+    # # DAQUI PARA BAIXO B2 E B3 NAO BATEM DEVIDO A ALGUMAS LINHAS DE COEFF
+    # b2 = (1.0 / No) * (
+    #     coeff_t[:][:n_pca_components].transpose().dot(h1)
+    #     .dot(coeff[:][:n_pca_components])
+    # )
+    # b3 = (optimal_reference_pulse.dot(coeff[:][:n_pca_components])).dot(h2).dot(coeff[:][:n_pca_components])
 
     amp_noise = np.zeros((len(noise_testing), 1))
     amp_signal = np.zeros((len(signal_testing), 1))
@@ -167,10 +176,9 @@ def mf_calculation(noise_mean, pedestal, training_percentage=50):
 
 
 if __name__ == '__main__':
-    noise_mean = 90
-    tile_partition = 'LBA'
-    module = '06'
-    channel = '45'
-    pedestal = tilecal_helper.get_ped_value(tile_partition, module, channel)
-    print(f'Using Pedestal: {pedestal}')
-    mf_calculation(noise_mean, pedestal, training_percentage=50)
+    noise_mean = 30
+    t0 = time.time()
+
+    mf_calculation(noise_mean, training_percentage=50)
+    print('MF Script finished!')
+    print(time.time() - t0, "seconds wall time")

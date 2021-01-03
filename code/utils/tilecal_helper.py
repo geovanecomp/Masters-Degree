@@ -5,6 +5,7 @@ import numpy as np
 # Considering 3 intial columns for partition, channel and module
 TILE_DIMENSION = 10
 FULL_PEDESTAL_DIRECTORY_FILE = 'data/ped_tile.txt'
+DEFAULT_PARTITION_NAME = 'LBA'
 
 
 # Tilecal has 4 Partitions called: LBA, EBA, LBC, EBC
@@ -54,19 +55,37 @@ def read_tile_data(tile_partition, noise_mean):
 # here is to identify which pedestal should we use and apply a pre-processing
 # of removing the pedestal for each module and channel.
 def generate_partition_data_without_ped(real_noises, high_gain=1):
-    partition_pos = 0
     module_pos = 1
     channel_pos = 2
 
+    ped_list = np.loadtxt(f'data/{DEFAULT_PARTITION_NAME}/pedestal.txt')
+
     for i in range(len(real_noises)):
-        partition_name = _partition_mapper(real_noises[i][partition_pos])
+
         module = int(real_noises[i][module_pos])
         channel = int(real_noises[i][channel_pos])
-        pedestal = get_ped_value(partition_name, module, channel, high_gain)
+        pedestal = _get_ped_value_for_partition_cleanup(ped_list, DEFAULT_PARTITION_NAME, module, channel, high_gain)
 
         real_noises[i][channel_pos+1:TILE_DIMENSION] = real_noises[i][channel_pos+1:TILE_DIMENSION] - pedestal
 
     return real_noises
+
+
+def _get_ped_value_for_partition_cleanup(ped_list, tile_partition, module, channel, high_gain=1):
+    module_pos = 0
+    channel_pos = 1
+    gain_pos = 2
+    ped_pos = 3
+
+    for i in range(len(ped_list)):
+        if ped_list[i][module_pos] == module:
+            for j in range(len(ped_list[channel_pos])):
+                if ped_list[i][channel_pos] == channel and ped_list[i][gain_pos] == high_gain:
+                    pedestal = float(ped_list[i][ped_pos])
+                    return pedestal
+
+    print('Pedestal Not Found')
+    return None
 
 
 # Each partition has 64 modules and each module has 48 channels.

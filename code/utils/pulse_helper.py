@@ -30,13 +30,12 @@ def get_jitter_pulse():
                 )
             )
 
-    # jitter = np.random.randint(-6, 6, 1) # Phase deviation
-    jitter = 0  # Phase deviation - It is set as 0 for now...
+    jitter = int(np.random.randint(-10, 10, 1)) # Phase deviation
 
-    # mu, sigma = 0, 0.05 # mean and standard deviation
+    mu, sigma = 0, 0.02 # mean and standard deviation
     # Represents hardware agin or general uncertainty
-    # deformation = np.random.normal(mu, sigma, number_of_pulses)
-    deformation = np.zeros(number_of_pulses)  # It is set as 0 for now...
+    deformation = np.random.normal(mu, sigma, number_of_pulses)
+    # deformation = np.zeros(number_of_pulses)  # It is set as 0 for now...
 
     zero_idx = np.where(pulse[:, 0] < 0)
     zero_idx = zero_idx[0][-1] + 1

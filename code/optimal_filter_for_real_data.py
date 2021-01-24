@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import time
 
 from utils import file_helper
 
@@ -53,26 +54,34 @@ def of_weights():
     return weights
 
 
-def of_calculation(noise_mean):
-    print('OF - Processing signal\n')
+def of_calculation(noise_mean, number_of_data, sufix=''):
+    print(f'OF - Processing signal for mean {noise_mean}{sufix}\n')
 
-    amplitude_file_name = 'results/real_data/mu{}/tile_A.txt'.format(noise_mean)
-    signal_file_name = 'results/real_data/mu{}/tile_signal.txt'.format(noise_mean)
+    base_folder = f'results/real_data/mu{noise_mean}'
+    amplitude_file_name = f'{base_folder}/tile_A{sufix}.txt'
+    signal_file_name = f'{base_folder}/tile_signal{sufix}.txt'
 
-    amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)
-    signal = pd.read_csv(signal_file_name, sep=" ", header=None)
+    amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)[:number_of_data]
+    signal = pd.read_csv(signal_file_name, sep=" ", header=None)[:number_of_data][:]
+
+    print(f'Lenght of amplitudes {len(amplitude)}')
+    print(f'Lenght of signals {len(signal)}\n')
 
     weights = pd.DataFrame([-0.37873481, -0.35634348, 0.17828771, 0.81313877, 0.27867064, -0.20540129, -0.32961754])
 
     of_amplitude = signal.dot(weights)
     amp_error = amplitude - of_amplitude
 
-    folder_name = 'real_data/mu{}/optimal_filter'.format(noise_mean)
-    file_helper.save_file_in('of_amp_signal', folder_name, of_amplitude)
-    file_helper.save_file_in('of_amp_error', folder_name, amp_error)
+    folder_name = f'{base_folder}/optimal_filter'
+    file_helper.save_file_in(f'of_amp_signal{sufix}', folder_name, of_amplitude)
+    file_helper.save_file_in(f'of_amp_error{sufix}', folder_name, amp_error)
 
 
 if __name__ == '__main__':
-    noise_mean = 50
+    noise_mean = 30
+    number_of_data = 200000
+    t0 = time.time()
 
-    of_calculation(noise_mean)
+    of_calculation(noise_mean, number_of_data, sufix='_small')
+    print('OF Script finished!')
+    print(time.time() - t0, "seconds wall time")

@@ -10,31 +10,36 @@ from utils import pulse_helper, file_helper
 np.set_printoptions(suppress=True)
 
 
-def mf_calculation(noise_mean, training_percentage=50):
-    TEN_BITS_ADC_VALUE = 1023
+def mf_calculation(noise_mean, training_percentage=50, sufix=''):
+    # TEN_BITS_ADC_VALUE = 1023
+    ADC_VALUE = 5
     DIMENSION = 7
     tile_partition = 'LBA'
 
-    print('MF - Processing signal for mean {}\n'.format(noise_mean))
+    print(f'MF - Processing signal for mean {noise_mean}{sufix}\n')
 
     # Real data
-    amplitude_file_name = 'results/real_data/mu{}/tile_A_small.txt'.format(noise_mean)
-    signal_file_name = 'results/real_data/mu{}/tile_signal_small.txt'.format(noise_mean)
-    real_noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}_small_no_ped.txt'
+    base_folder = f'results/real_data/mu{noise_mean}'
+    amplitude_file_name = f'{base_folder}/tile_A{sufix}.txt'
+    signal_file_name = f'{base_folder}/tile_signal{sufix}.txt'
+    real_noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}{sufix}_no_ped.txt'
 
-    amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)
-    signal_testing = pd.read_csv(signal_file_name, sep=" ", header=None)
+    real_noises = pd.read_csv(real_noise_file_name, sep=" ", usecols=(3, 4, 5, 6, 7, 8, 9), header=None)
 
-    number_of_data = len(signal_testing)
+    number_of_data = len(real_noises)
     qtd_for_training = int(number_of_data / ((100 / training_percentage)))
     qtd_for_testing = number_of_data - qtd_for_training
 
-    real_noises = pd.read_csv(real_noise_file_name, sep=" ", usecols=(3, 4, 5 ,6, 7, 8, 9), header=None)
-
     # Getting data from boundaries
-    noise_training = real_noises[:qtd_for_training][:]
-    noise_testing = real_noises[qtd_for_testing:][:]
+    amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)[:qtd_for_testing]
+    signal_testing = pd.read_csv(signal_file_name, sep=" ", header=None)[:qtd_for_testing][:]
+    noise_testing = real_noises[:qtd_for_testing][:]  # test with 1st % part
+    noise_training = real_noises[qtd_for_training:][:]  # train with 2nd % part
 
+    print(f'Training with {len(noise_training)} events')
+    print(f'Testing with {len(noise_testing)} events')
+    print(f'Lenght of amplitudes {len(amplitude)}')
+    print(f'Lenght of signals {len(signal_testing)}\n')
     # Branqueamento
     noise_train_cov = noise_training.cov()
 
@@ -54,7 +59,7 @@ def mf_calculation(noise_mean, training_percentage=50):
     # PCA Part
     pure_signal = np.zeros((qtd_for_testing, DIMENSION))
     for i in range(0, qtd_for_testing):
-        pure_signal[i, :] = TEN_BITS_ADC_VALUE * np.random.randn(1) * pulse_helper.get_jitter_pulse()
+        pure_signal[i, :] = ADC_VALUE * np.random.rand(1) * pulse_helper.get_jitter_pulse()
 
     pure_signal = pd.DataFrame(pure_signal)
 
@@ -72,11 +77,7 @@ def mf_calculation(noise_mean, training_percentage=50):
 
     optimal_reference_pulse = bleached_reference_pulse.dot(coeff_t[:][:n_pca_components])
 
-    # Temporary code considering pedestal.
-    # optimal_noise = ((noise_testing - pedestal).dot(W_t)).dot(coeff_t[:][:n_pca_components])
-    # optimal_signal = ((signal_testing - pedestal).dot(W_t)).dot(coeff_t[:][:n_pca_components])
-
-    optimal_noise = (noise_testing.dot(W_t)).dot(coeff_t[:][:n_pca_components])
+    optimal_noise = pd.DataFrame((np.dot(noise_testing, W_t)).dot(coeff_t[:][:n_pca_components]))
     optimal_signal = (signal_testing.dot(W_t)).dot(coeff_t[:][:n_pca_components])
 
     No = variance * 2
@@ -167,10 +168,10 @@ def mf_calculation(noise_mean, training_percentage=50):
     amp_signal = pd.DataFrame(amp_signal)
     amp_error = amp_signal.values - amplitude.values
 
-    folder_name = 'real_data/mu{}/matched_filter'.format(noise_mean)
-    file_helper.save_file_in('mf_amp_signal', folder_name, amp_signal)
-    file_helper.save_file_in('mf_amp_noise', folder_name, amp_noise)
-    file_helper.save_file_in('mf_amp_error', folder_name, amp_error)
+    folder_name = f'{base_folder}/matched_filter'
+    file_helper.save_file_in(f'mf_amp_signal{sufix}', folder_name, amp_signal)
+    file_helper.save_file_in(f'mf_amp_noise{sufix}', folder_name, amp_noise)
+    file_helper.save_file_in(f'mf_amp_error{sufix}', folder_name, amp_error)
 
     print('Finished!')
 
@@ -179,6 +180,6 @@ if __name__ == '__main__':
     noise_mean = 30
     t0 = time.time()
 
-    mf_calculation(noise_mean, training_percentage=50)
+    mf_calculation(noise_mean, training_percentage=50, sufix='_small')
     print('MF Script finished!')
     print(time.time() - t0, "seconds wall time")

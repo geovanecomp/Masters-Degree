@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-"""Compares OF and MF STD and mean for real data."""
-
+"""Compares OF, D-MF, E-MF STD and mean for real data."""
+# results_low_snr_adc_5
 import os.path
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,22 +13,32 @@ DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
     noise_means = [30, 50, 90]
+    sufix = '_small'
+    base_folder = DIR_PATH + '/../results/real_data'
 
     of_means = []
     of_stds = []
+
+    dmf_means = []
+    dmf_stds = []
 
     mf_means = []
     mf_stds = []
 
     for noise_mean in noise_means:
-        of_error_file_name = DIR_PATH + '/../results/real_data/mu{}/optimal_filter/of_amp_error.txt'.format(noise_mean)
-        mf_error_file_name = DIR_PATH + '/../results/real_data/mu{}/matched_filter/mf_amp_error.txt'.format(noise_mean)
+        of_error_file_name = base_folder + f'/mu{noise_mean}/optimal_filter/of_amp_error{sufix}.txt'
+        dmf_error_file_name = base_folder + f'/mu{noise_mean}/deterministic_matched_filter/dmf_amp_error{sufix}.txt'
+        mf_error_file_name = base_folder + f'/mu{noise_mean}/matched_filter/mf_amp_error{sufix}.txt'
 
         of_error = np.loadtxt(of_error_file_name)
+        dmf_error = np.loadtxt(dmf_error_file_name)
         mf_error = np.loadtxt(mf_error_file_name)
 
         of_means.append(np.mean(of_error))
         of_stds.append(np.std(of_error))
+
+        dmf_means.append(np.mean(dmf_error))
+        dmf_stds.append(np.std(dmf_error))
 
         mf_means.append(np.mean(mf_error))
         mf_stds.append(np.std(mf_error))
@@ -39,23 +49,22 @@ if __name__ == '__main__':
             'size': 22
             }
 
-    # fig.suptitle('OF X MF' ' {} eventos\n A=300, PU=100'
-    #              .format(num_events))
-
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
     ax0.set_xlabel('Ruído', **font)
     ax0.set_ylabel('Média', **font)
-    ax0.plot(noise_means, of_means, 'ro', label='Média-OF')
-    ax0.plot(noise_means, mf_means, 'bo', label='Média-MF')
-    ax0.legend(loc='upper left', fontsize=21)
+    ax0.plot(noise_means, of_means, '-ro', label='Média-OF')
+    ax0.plot(noise_means, dmf_means, '-bo', label='Média-DMF')
+    ax0.plot(noise_means, mf_means, '-go', label='Média-EMF')
+    ax0.legend(loc='best', fontsize=19)
 
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
     ax1.set_xlabel('Ruído', **font)
     ax1.set_ylabel('RMS', **font)
-    ax1.plot(noise_means, of_stds, 'ro', label='RMS-OF')
-    ax1.plot(noise_means, mf_stds, 'bo', label='RMS-MF')
-    ax1.legend(loc='upper left', fontsize=21)
+    ax1.plot(noise_means, of_stds, '-ro', label='RMS-OF')
+    ax1.plot(noise_means, dmf_stds, '-bo', label='RMS-DMF')
+    ax1.plot(noise_means, mf_stds, '-go', label='RMS-EMF')
+    ax1.legend(loc='best', fontsize=19)
 
     plt.show()

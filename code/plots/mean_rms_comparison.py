@@ -14,7 +14,7 @@ DIR_PATH = os.path.dirname(__file__)
 if __name__ == '__main__':
     noise_means = [30, 50, 90]
     sufix = '_small'
-    base_folder = DIR_PATH + '/../results/real_data'
+    base_folder = DIR_PATH + '/../results/hybrid'
 
     of_means = []
     of_stds = []
@@ -26,13 +26,13 @@ if __name__ == '__main__':
     mf_stds = []
 
     for noise_mean in noise_means:
-        of_error_file_name = base_folder + f'/mu{noise_mean}/optimal_filter/of_amp_error{sufix}.txt'
-        dmf_error_file_name = base_folder + f'/mu{noise_mean}/deterministic_matched_filter/dmf_amp_error{sufix}.txt'
-        mf_error_file_name = base_folder + f'/mu{noise_mean}/matched_filter/mf_amp_error{sufix}.txt'
+        of_file_name = base_folder + f'/OF/mu{noise_mean}/of_amp_error{sufix}.txt'
+        dmf_file_name = base_folder + f'/D_MF/mu{noise_mean}/dmf_amp_error{sufix}.txt'
+        mf_file_name = base_folder + f'/E_MF/mu{noise_mean}/mf_amp_error{sufix}.txt'
 
-        of_error = np.loadtxt(of_error_file_name)
-        dmf_error = np.loadtxt(dmf_error_file_name)
-        mf_error = np.loadtxt(mf_error_file_name)
+        of_error = np.loadtxt(of_file_name)
+        dmf_error = np.loadtxt(dmf_file_name)
+        mf_error = np.loadtxt(mf_file_name)
 
         of_means.append(np.mean(of_error))
         of_stds.append(np.std(of_error))
@@ -48,6 +48,20 @@ if __name__ == '__main__':
             'family': 'Times New Roman',
             'size': 22
             }
+    print('Means and RMSs')
+    print('OF: \n')
+    print(of_means)
+    print(of_stds)
+
+    print('DMF: \n')
+    print(dmf_means)
+    print(dmf_stds)
+
+    print('EMF: \n')
+    print(mf_means)
+    print(mf_stds)
+    # fig.suptitle('OF X MF' ' {} eventos\n A=300, PU=100'
+    #              .format(num_events))
 
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)

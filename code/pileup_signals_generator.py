@@ -63,14 +63,14 @@ def _apply_pileup_indexes(i, pu_indexes, x):
 
 def pu_generator(number_of_events, signal_probabilities, pedestal, is_noise=False):
     number_of_data = TILECAL_NUMBER_OF_CHANNELS * number_of_events
+    base_folder = 'results/simulated/pileup_data'
 
     for level in range(0, len(signal_probabilities)):
         signal_probability = signal_probabilities[level]  # Signal_probability
         signal_probability_percentage = signal_probability * 100
         signal_mean = 300  # Exponential signal mean
 
-        print('PU Generator - Processing signal probability:  {0:2.6f}%\n'
-              .format(signal_probability_percentage))
+        print(f'PU Generator - Processing signal probability:  {signal_probability_percentage}%\n')
 
         x = _base_data(number_of_data, pedestal)
         pu_indexes = _pileup_indexes(signal_probability, number_of_data)
@@ -84,13 +84,13 @@ def pu_generator(number_of_events, signal_probabilities, pedestal, is_noise=Fals
         data = np.transpose(data)
 
         # Stores Noise Data
-        folder_name = 'pileup_data/prob_{}'.format(signal_probability_percentage)
-        base_file_name = 'noise_prob_{}'.format(signal_probability_percentage)
+        folder_name = f'{base_folder}/prob_{signal_probability_percentage}'
+        base_file_name = f'noise_prob_{signal_probability_percentage}'
         file_helper.save_file('tile_' + base_file_name, folder_name, data)
 
         # Stores mixed signal and amplitude
-        folder_name = 'pileup_data/prob_{}'.format(signal_probability_percentage)
-        base_file_name = 'signal_prob_{}'.format(signal_probability_percentage)
+        folder_name = f'{base_folder}/prob_{signal_probability_percentage}'
+        base_file_name = f'signal_prob_{signal_probability_percentage}'
         A = np.zeros(number_of_events)  # Amplitude
         for i in range(0, number_of_events):
             A[i] = np.random.exponential(signal_mean)  # Simulating true Amplitude

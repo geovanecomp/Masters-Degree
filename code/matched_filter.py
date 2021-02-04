@@ -11,6 +11,8 @@ np.set_printoptions(suppress=True)
 
 def mf_calculation(number_of_data, pedestal, probs, training_percentage=50):
     TEN_BITS_ADC_VALUE = 1023
+    # base_folder = 'results/simulated/pileup_data'  # Normal data
+    base_folder = 'results/simulated/base_data'  # Pileup data
     dimension = 7
     qtd_for_training = int(number_of_data / ((100 / training_percentage)))
     qtd_for_testing = number_of_data - qtd_for_training
@@ -19,15 +21,15 @@ def mf_calculation(number_of_data, pedestal, probs, training_percentage=50):
     probs = np.array(probs) * 100
     for prob in probs:
         prob = prob
-        print('MF - Processing signal probability:  {}%\n'.format(prob))
+        print(f'MF - Processing signal probability:  {prob}%\n')
         # Normal data
-        # amplitude_file_name = 'results/base_data/{}_events/amplitude.txt'.format(qtd_for_training)
-        # signal_testing_file_name = 'results/base_data/{}_events/signal_testing.txt'.format(qtd_for_training)
+        # amplitude_file_name = f'{base_folder}/{qtd_for_training}_events/amplitude.txt'
+        # signal_testing_file_name = f'{base_folder}/{qtd_for_training}_events/signal_testing.txt'
 
         # Pileup data
-        amplitude_file_name = 'results/pileup_data/prob_{}/{}_events/tile_A_signal_prob_{}.txt'.format(prob, qtd_for_training, prob)
-        signal_testing_file_name = 'results/pileup_data/prob_{}/{}_events/tile_signal_prob_{}.txt'.format(prob, qtd_for_training, prob)
-        result_prefix = 'pileup_prob_{}_'.format(prob)
+        amplitude_file_name = f'{base_folder}/prob_{prob}/{qtd_for_training}_events/tile_A_signal_prob_{prob}.txt'
+        signal_testing_file_name = f'{base_folder}/prob_{prob}/{qtd_for_training}_events/tile_signal_prob_{prob}.txt'
+        result_prefix = f'pileup_prob_{prob}_'
 
         amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)
         signal_testing = pd.read_csv(signal_testing_file_name, sep=" ", header=None)

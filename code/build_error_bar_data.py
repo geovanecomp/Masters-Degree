@@ -6,10 +6,11 @@ from optimal_filter import of_calculation
 
 np.set_printoptions(suppress=True)
 
+BASE_FOLER = 'results/simulated'
+
 
 def _save_file(file_name, file_folder, num_events, data):
-    fileText = 'results/{}/{}_events/{}.txt' \
-               .format(file_folder, num_events, file_name)
+    fileText = f'BASE_FOLER/{file_folder}/{num_events}_events/{file_name}.txt'
 
     np.savetxt(
         fileText,
@@ -51,8 +52,8 @@ if __name__ == '__main__':
             of_calculation(num_events, [prob])
             mf_calculation(num_data, pedestal, [prob], training_percentage)
 
-            of_error_file_name = 'results/optimal_filter/{}_events/pileup_prob_{}_of_amp_error.txt'.format(num_events, prob * 100)
-            mf_error_file_name = 'results/matched_filter/{}_events/pileup_prob_{}_amp_error.txt'.format(num_events, prob * 100)
+            of_error_file_name = f'{BASE_FOLER}/optimal_filter/{num_events}_events/pileup_prob_{prob * 100}_of_amp_error.txt'
+            mf_error_file_name = f'{BASE_FOLER}/matched_filter/{num_events}_events/pileup_prob_{prob * 100}_amp_error.txt'
             of_error = np.loadtxt(of_error_file_name)
             mf_error = np.loadtxt(mf_error_file_name)
 

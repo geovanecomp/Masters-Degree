@@ -57,9 +57,10 @@ def of_weights():
 def of_calculation(noise_mean, number_of_data, sufix=''):
     print(f'OF - Processing signal for mean {noise_mean}{sufix}\n')
 
-    base_folder = f'results/real_data/mu{noise_mean}'
-    amplitude_file_name = f'{base_folder}/tile_A{sufix}.txt'
-    signal_file_name = f'{base_folder}/tile_signal{sufix}.txt'
+    base_folder = 'results/hybrid'
+    data_folder = f'{base_folder}/base_data/mu{noise_mean}'
+    amplitude_file_name = f'{data_folder}/tile_A{sufix}.txt'
+    signal_file_name = f'{data_folder}/tile_signal{sufix}.txt'
 
     amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)[:number_of_data]
     signal = pd.read_csv(signal_file_name, sep=" ", header=None)[:number_of_data][:]
@@ -72,7 +73,7 @@ def of_calculation(noise_mean, number_of_data, sufix=''):
     of_amplitude = signal.dot(weights)
     amp_error = amplitude - of_amplitude
 
-    folder_name = f'{base_folder}/optimal_filter'
+    folder_name = f'{base_folder}/OF/mu{noise_mean}'
     file_helper.save_file_in(f'of_amp_signal{sufix}', folder_name, of_amplitude)
     file_helper.save_file_in(f'of_amp_error{sufix}', folder_name, amp_error)
 

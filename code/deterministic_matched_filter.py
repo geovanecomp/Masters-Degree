@@ -11,9 +11,9 @@ def deterministic_A(noise_mean, number_of_data, sufix=''):
     print(f'Deterministic MF - Processing signal for mean {noise_mean}{sufix}\n')
 
     # Real data
-    base_folder = f'results/real_data/mu{noise_mean}'
-    amplitude_file_name = f'{base_folder}/tile_A{sufix}.txt'
-    signal_file_name = f'{base_folder}/tile_signal{sufix}.txt'
+    base_folder = 'results/hybrid'
+    amplitude_file_name = f'{base_folder}/base_data/mu{noise_mean}/tile_A{sufix}.txt'
+    signal_file_name = f'{base_folder}/base_data/mu{noise_mean}/tile_signal{sufix}.txt'
     real_noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}{sufix}_no_ped.txt'
 
     # Getting data from boundaries
@@ -33,7 +33,7 @@ def deterministic_A(noise_mean, number_of_data, sufix=''):
     dmf_amplitude = ((R.dot(C_i)).dot(S)) / ((S_t.dot(C_i)).dot(S))[0]
     amp_error = amplitude - dmf_amplitude
 
-    folder_name = f'{base_folder}/deterministic_matched_filter'
+    folder_name = f'{base_folder}/D_MF/mu{noise_mean}'
     file_helper.save_file_in(f'dmf_amp_signal{sufix}', folder_name, dmf_amplitude)
     file_helper.save_file_in(f'dmf_amp_error{sufix}', folder_name, amp_error)
 

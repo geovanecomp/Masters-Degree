@@ -19,7 +19,7 @@ def deterministic_A(noise_mean, number_of_data, sufix=''):
     # Getting data from boundaries
     amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)[:number_of_data]
     signal_testing = pd.read_csv(signal_file_name, sep=" ", header=None)[:number_of_data][:]
-    real_noises = pd.read_csv(real_noise_file_name, sep=" ", usecols=(3, 4, 5, 6, 7, 8, 9), header=None)
+    real_noises = pd.read_csv(real_noise_file_name, sep=" ", usecols=(3, 4, 5, 6, 7, 8, 9), header=None)[:number_of_data][:]
 
     S = pd.DataFrame([0, 0.0172, 0.4524, 1.0000, 0.5633, 0.1493, 0.0424])
 
@@ -40,5 +40,5 @@ def deterministic_A(noise_mean, number_of_data, sufix=''):
 
 if __name__ == '__main__':
     noise_mean = 30
-    number_of_data = 200000
+    number_of_data = 2000000
     deterministic_A(noise_mean, number_of_data, sufix='_small')

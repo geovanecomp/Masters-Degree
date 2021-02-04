@@ -79,7 +79,7 @@ def of_calculation(noise_mean, number_of_data, sufix=''):
 
 if __name__ == '__main__':
     noise_mean = 30
-    number_of_data = 200000
+    number_of_data = 2000000
     t0 = time.time()
 
     of_calculation(noise_mean, number_of_data, sufix='_small')

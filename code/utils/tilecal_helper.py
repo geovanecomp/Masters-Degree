@@ -55,7 +55,7 @@ def read_tile_data(tile_partition, noise_mean):
 # and Channel. The remaining 7 columns are their respectives signals. The goal
 # here is to identify which pedestal should we use and apply a pre-processing
 # of removing the pedestal for each module and channel.
-def generate_partition_data_without_ped(real_noises, high_gain=1):
+def generate_partition_data_without_ped(noises, high_gain=1):
     module_pos = 1
     channel_pos = 2
     invalid_value = -1  # Represents outliers in that channel
@@ -63,24 +63,24 @@ def generate_partition_data_without_ped(real_noises, high_gain=1):
     ped_list = np.loadtxt(f'data/{DEFAULT_PARTITION_NAME}/pedestal.txt')
     invalid_rows = []
 
-    for i in range(len(real_noises)):
+    for i in range(len(noises)):
 
-        module = int(real_noises[i][module_pos])
-        channel = int(real_noises[i][channel_pos])
-        noises_row = real_noises[i][channel_pos+1:TILE_DIMENSION]
+        module = int(noises[i][module_pos])
+        channel = int(noises[i][channel_pos])
+        noise_row = noises[i][channel_pos+1:TILE_DIMENSION]
 
-        row_with_outliers = collections.Counter(noises_row)[invalid_value] == DATA_DIMENSION
+        row_with_outliers = collections.Counter(noise_row)[invalid_value] == DATA_DIMENSION
 
         if row_with_outliers:
             invalid_rows.append(i)
             continue
 
         pedestal = _get_ped_value_for_partition_cleanup(ped_list, DEFAULT_PARTITION_NAME, module, channel, high_gain)
-        real_noises[i][channel_pos+1:TILE_DIMENSION] = noises_row - pedestal
+        noises[i][channel_pos+1:TILE_DIMENSION] = noise_row - pedestal
 
     # Deleting everything at the end for performance.
-    real_noises = np.delete(real_noises, invalid_rows, 0)
-    return real_noises
+    noises = np.delete(noises, invalid_rows, 0)
+    return noises
 
 
 def _get_ped_value_for_partition_cleanup(ped_list, tile_partition, module, channel, high_gain=1):

@@ -1,9 +1,10 @@
 """Helper that provides quick and easy access to the Tilecal data"""
 
 import numpy as np
+import collections
 
-# Considering 3 intial columns for partition, channel and module
-TILE_DIMENSION = 10
+TILE_DIMENSION = 10  # Considering 3 intial columns for partition, channel and module
+DATA_DIMENSION = 7  # Ignoring columns for partition, channel and module
 FULL_PEDESTAL_DIRECTORY_FILE = 'data/ped_tile.txt'
 DEFAULT_PARTITION_NAME = 'LBA'
 
@@ -57,17 +58,28 @@ def read_tile_data(tile_partition, noise_mean):
 def generate_partition_data_without_ped(real_noises, high_gain=1):
     module_pos = 1
     channel_pos = 2
+    invalid_value = -1  # Represents outliers in that channel
 
     ped_list = np.loadtxt(f'data/{DEFAULT_PARTITION_NAME}/pedestal.txt')
+    invalid_rows = []
 
     for i in range(len(real_noises)):
 
         module = int(real_noises[i][module_pos])
         channel = int(real_noises[i][channel_pos])
+        noises_row = real_noises[i][channel_pos+1:TILE_DIMENSION]
+
+        row_with_outliers = collections.Counter(noises_row)[invalid_value] == DATA_DIMENSION
+
+        if row_with_outliers:
+            invalid_rows.append(i)
+            continue
+
         pedestal = _get_ped_value_for_partition_cleanup(ped_list, DEFAULT_PARTITION_NAME, module, channel, high_gain)
+        real_noises[i][channel_pos+1:TILE_DIMENSION] = noises_row - pedestal
 
-        real_noises[i][channel_pos+1:TILE_DIMENSION] = real_noises[i][channel_pos+1:TILE_DIMENSION] - pedestal
-
+    # Deleting everything at the end for performance.
+    real_noises = np.delete(real_noises, invalid_rows, 0)
     return real_noises
 
 

@@ -132,3 +132,15 @@ def fix_ped_value(tile_partition):
 
     file_directory = f'data/{tile_partition}/pedestal.txt'
     np.savetxt(file_directory, ped_list, fmt='%i %i %i %6f')
+
+
+def generate_data_by_channel(noises, channel):
+    channel_pos = 2
+    channel_noises = []
+
+    for i in range(len(noises)):
+        current_channel = int(noises[i][channel_pos])
+        if current_channel == channel:
+            channel_noises.append(noises[i])
+
+    return channel_noises

@@ -10,9 +10,9 @@ if __name__ == '__main__':
     noise_mean = 30
     print(f'Processing for mean: {noise_mean}')
     tile_partition = 'LBA'
-    real_noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}.txt'
-    real_noises = np.loadtxt(real_noise_file_name)
-    new_noises = tilecal_helper.generate_partition_data_without_ped(real_noises)
+    noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}.txt'
+    noises = np.loadtxt(noise_file_name)
+    new_noises = tilecal_helper.generate_partition_data_without_ped(noises)
     file_path = f'data/LBA/LBAmu{noise_mean}_sanitized_no_ped.txt'
 
     # 3 int digits for localization and others for the data

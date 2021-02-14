@@ -23,7 +23,7 @@ def mf_calculation(noise_mean, training_percentage=50, sufix=''):
     data_folder = f'{base_folder}/base_data/mu{noise_mean}'
     amplitude_file_name = f'{data_folder}/tile_A{sufix}.txt'
     signal_file_name = f'{data_folder}/tile_signal{sufix}.txt'
-    real_noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}{sufix}_no_ped.txt'
+    real_noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}_no_ped{sufix}.txt'
 
     real_noises = pd.read_csv(real_noise_file_name, sep=" ", usecols=(3, 4, 5, 6, 7, 8, 9), header=None)
 
@@ -39,8 +39,8 @@ def mf_calculation(noise_mean, training_percentage=50, sufix=''):
 
     print(f'Training with {len(noise_training)} events')
     print(f'Testing with {len(noise_testing)} events')
-    print(f'Lenght of amplitudes {len(amplitude)}')
-    print(f'Lenght of signals {len(signal_testing)}\n')
+    print(f'Length of amplitudes {len(amplitude)}')
+    print(f'Length of signals {len(signal_testing)}\n')
     # Branqueamento
     noise_train_cov = noise_training.cov()
 
@@ -169,7 +169,7 @@ def mf_calculation(noise_mean, training_percentage=50, sufix=''):
     amp_signal = pd.DataFrame(amp_signal)
     amp_error = amp_signal.values - amplitude.values
 
-    folder_name = f'{base_folder}/E_MF/{noise_mean}'
+    folder_name = f'{base_folder}/E_MF/mu{noise_mean}'
     file_helper.save_file_in(f'mf_amp_signal{sufix}', folder_name, amp_signal)
     file_helper.save_file_in(f'mf_amp_noise{sufix}', folder_name, amp_noise)
     file_helper.save_file_in(f'mf_amp_error{sufix}', folder_name, amp_error)
@@ -179,8 +179,9 @@ def mf_calculation(noise_mean, training_percentage=50, sufix=''):
 
 if __name__ == '__main__':
     noise_mean = 30
+    channel = 24
     t0 = time.time()
 
-    mf_calculation(noise_mean, training_percentage=50, sufix='_small')
+    mf_calculation(noise_mean, training_percentage=50, sufix=f'_ch{channel}')
     print('MF Script finished!')
     print(time.time() - t0, "seconds wall time")

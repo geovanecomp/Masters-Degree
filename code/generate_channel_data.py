@@ -7,10 +7,13 @@ from utils import tilecal_helper
 
 
 if __name__ == '__main__':
-    noise_mean = 30
-    print(f'Processing for mean: {noise_mean}')
     tile_partition = 'LBA'
-    channel = 36
+    noise_mean = 30
+    channel = 24
+
+    print(f'Processing for mean: {noise_mean}')
+    print(f'Channel: {channel}')
+
     noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}_no_ped.txt'
     noises = np.loadtxt(noise_file_name)
     new_noises = tilecal_helper.generate_data_by_channel(noises, channel)

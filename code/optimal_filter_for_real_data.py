@@ -65,8 +65,8 @@ def of_calculation(noise_mean, number_of_data, sufix=''):
     amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)[:number_of_data]
     signal = pd.read_csv(signal_file_name, sep=" ", header=None)[:number_of_data][:]
 
-    print(f'Lenght of amplitudes {len(amplitude)}')
-    print(f'Lenght of signals {len(signal)}\n')
+    print(f'Length of amplitudes {len(amplitude)}')
+    print(f'Length of signals {len(signal)}\n')
 
     weights = pd.DataFrame([-0.37873481, -0.35634348, 0.17828771, 0.81313877, 0.27867064, -0.20540129, -0.32961754])
 
@@ -79,10 +79,18 @@ def of_calculation(noise_mean, number_of_data, sufix=''):
 
 
 if __name__ == '__main__':
+    tile_partition = 'LBA'
     noise_mean = 30
-    number_of_data = 2000000
+    channel = 24
+    sufix = f'_ch{channel}'
     t0 = time.time()
 
-    of_calculation(noise_mean, number_of_data, sufix='_small')
+    noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}_no_ped{sufix}.txt'
+
+    # Getting data from boundaries
+    all_noises = pd.read_csv(noise_file_name, sep=" ", usecols=(3, 4, 5, 6, 7, 8, 9), header=None)
+    number_of_data = int(len(all_noises) / 2)  # Only half part is needed due to the E-MF 50% training
+
+    of_calculation(noise_mean, number_of_data, sufix=sufix)
     print('OF Script finished!')
     print(time.time() - t0, "seconds wall time")

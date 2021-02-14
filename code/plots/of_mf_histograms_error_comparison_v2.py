@@ -11,13 +11,14 @@ DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
     # Real data
-    noise_mean = 90
-    sufix = '_small'
+    noise_mean = 30
+    channel = 24
+    sufix = f'_ch{channel}'
     base_folder = DIR_PATH + '/../results/hybrid'
     amplitude_file_name = f'{base_folder}/base_data/mu{noise_mean}/tile_A{sufix}.txt'
-    of_amp_error_file_name = f'{base_folder}/OF/{noise_mean}/of_amp_error{sufix}.txt'
-    dmf_amp_error_file_name = f'{base_folder}/D_MF/{noise_mean}/dmf_amp_error{sufix}.txt'
-    emf_amp_error_file_name = f'{base_folder}/E_MF/{noise_mean}/mf_amp_error{sufix}.txt'
+    of_amp_error_file_name = f'{base_folder}/OF/mu{noise_mean}/of_amp_error{sufix}.txt'
+    dmf_amp_error_file_name = f'{base_folder}/D_MF/mu{noise_mean}/dmf_amp_error{sufix}.txt'
+    emf_amp_error_file_name = f'{base_folder}/E_MF/mu{noise_mean}/mf_amp_error{sufix}.txt'
 
     amplitude = np.loadtxt(amplitude_file_name)
     of_amp_error = np.loadtxt(of_amp_error_file_name)
@@ -42,7 +43,7 @@ if __name__ == '__main__':
 
     # fig.suptitle('Comparação do erro \n' '{} eventos e Empilhamento de {}%'
     #              .format(num_events, prob))
-    fig.suptitle('Comparação do erro com Ruído Médio = {}\n {} eventos'.format(noise_mean, len(of_amp_error)))
+    fig.suptitle(f'Comparação do erro com Ruído Médio = {noise_mean} Canal: {channel}\n {len(of_amp_error)} eventos')
     ax0.hist(of_amp_error, bins=bins, color='dimgrey', histtype=u'step', label='OF')
     ax0.hist(dmf_amp_error, bins=bins, facecolor='dimgrey', histtype=u'step', label='D-MF')
     ax0.hist(emf_amp_error, bins=bins, facecolor='dimgrey', histtype=u'step', label='E-MF')

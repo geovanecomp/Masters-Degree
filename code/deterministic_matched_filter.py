@@ -5,9 +5,7 @@ import pandas as pd
 from utils import file_helper
 
 
-def deterministic_matched_filter(noise_mean, sufix=''):
-    tile_partition = 'LBA'
-
+def deterministic_matched_filter(noise_mean, tile_partition, sufix=''):
     print(f'Deterministic MF - Processing signal for mean {noise_mean}{sufix}\n')
 
     # Real data
@@ -43,6 +41,7 @@ def deterministic_matched_filter(noise_mean, sufix=''):
 
 
 if __name__ == '__main__':
+    tile_partition = 'EBA'
     noise_mean = 30
-    channel = 24
-    deterministic_matched_filter(noise_mean, sufix=f'_ch{channel}')
+    channel = 10
+    deterministic_matched_filter(noise_mean, tile_partition, sufix=f'_ch{channel}')

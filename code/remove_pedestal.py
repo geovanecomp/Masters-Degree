@@ -7,13 +7,15 @@ from utils import tilecal_helper
 
 
 if __name__ == '__main__':
+    tile_partition = 'EBA'
     noise_mean = 30
-    print(f'Processing for mean: {noise_mean}')
-    tile_partition = 'LBA'
+
+    print(f'Processing for mean: {tile_partition}_{noise_mean}')
+
     noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}.txt'
     noises = np.loadtxt(noise_file_name)
     new_noises = tilecal_helper.generate_partition_data_without_ped(noises)
-    file_path = f'data/LBA/LBAmu{noise_mean}_sanitized_no_ped.txt'
+    file_path = f'data/{tile_partition}/{tile_partition}mu{noise_mean}_no_ped.txt'
 
     # 3 int digits for localization and others for the data
     fmt = '%d', '%d', '%d', '%.6f', '%.6f', '%.6f', '%.6f', '%.6f', '%.6f', '%.6f'

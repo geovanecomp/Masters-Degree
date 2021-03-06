@@ -79,9 +79,9 @@ def of_calculation(noise_mean, number_of_data, sufix=''):
 
 
 if __name__ == '__main__':
-    tile_partition = 'LBA'
+    tile_partition = 'EBA'
     noise_mean = 30
-    channel = 24
+    channel = 10
     sufix = f'_ch{channel}'
     t0 = time.time()
 

@@ -10,11 +10,10 @@ from utils import pulse_helper, file_helper
 np.set_printoptions(suppress=True)
 
 
-def mf_calculation(noise_mean, training_percentage=50, sufix=''):
+def mf_calculation(noise_mean, tile_partition, training_percentage=50, sufix=''):
     # TEN_BITS_ADC_VALUE = 1023
     ADC_VALUE = 5
     DIMENSION = 7
-    tile_partition = 'LBA'
 
     print(f'MF - Processing signal for mean {noise_mean}{sufix}\n')
 
@@ -178,10 +177,11 @@ def mf_calculation(noise_mean, training_percentage=50, sufix=''):
 
 
 if __name__ == '__main__':
+    tile_partition = 'EBA'
     noise_mean = 30
-    channel = 24
+    channel = 10
     t0 = time.time()
 
-    mf_calculation(noise_mean, training_percentage=50, sufix=f'_ch{channel}')
+    mf_calculation(noise_mean, tile_partition, training_percentage=50, sufix=f'_ch{channel}')
     print('MF Script finished!')
     print(time.time() - t0, "seconds wall time")

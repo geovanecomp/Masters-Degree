@@ -44,9 +44,9 @@ if __name__ == '__main__':
     fig.suptitle(f'Comparação do erro com Ruído Médio = {noise_mean} Canal: {channel} Eventos: {len(of_amp_error)}')
 
     # ax0.hist(of_amp_error, bins=bins, range=(-75, 75), color='red', histtype=u'step', label='OF')
-    ax0.hist(of_amp_error, bins=bins, range=(-75, 75), color='red', histtype=u'step', label='OF')
-    ax0.hist(dmf_amp_error, bins=bins, range=(-75, 75), facecolor='dimgrey', histtype=u'step', label='D-MF')
-    ax0.hist(emf_amp_error, bins=bins, range=(-75, 75), facecolor='blue', histtype=u'step', label='E-MF')
+    ax0.hist(of_amp_error, bins=bins, range=(-100, 100), color='red', histtype=u'step', label='OF')
+    ax0.hist(dmf_amp_error, bins=bins, range=(-100, 100), facecolor='dimgrey', histtype=u'step', label='D-MF')
+    ax0.hist(emf_amp_error, bins=bins, range=(-100, 100), facecolor='blue', histtype=u'step', label='E-MF')
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
     ax0.set_title('\nOF ' r'$\mu={}$, $\sigma={}$'

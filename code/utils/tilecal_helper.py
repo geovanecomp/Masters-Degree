@@ -16,17 +16,17 @@ def _partition_mapper(tile_partition):
         if tile_partition == 0:
             return 'LBA'
         elif tile_partition == 1:
-            return 'EBA'
-        elif tile_partition == 2:
             return 'LBC'
+        elif tile_partition == 2:
+            return 'EBA'
         elif tile_partition == 3:
             return 'EBC'
     elif isinstance(tile_partition, str):
         if tile_partition == 'LBA':
             return 0
-        elif tile_partition == 'EBA':
-            return 1
         elif tile_partition == 'LBC':
+            return 1
+        elif tile_partition == 'EBA':
             return 2
         elif tile_partition == 'EBC':
             return 3

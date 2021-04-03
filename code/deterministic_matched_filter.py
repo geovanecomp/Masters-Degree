@@ -5,11 +5,11 @@ import pandas as pd
 from utils import file_helper
 
 
-def deterministic_matched_filter(noise_mean, tile_partition, sufix=''):
-    print(f'Deterministic MF - Processing signal for mean {noise_mean}{sufix}\n')
+def deterministic_matched_filter(amplitude_mean, noise_mean, tile_partition, sufix=''):
+    print(f'Deterministic MF - Processing signal for amp{amplitude_mean} and mu {noise_mean}{sufix}\n')
 
     # Real data
-    base_folder = 'results/hybrid'
+    base_folder = f'results/hybrid/amplitude_mean{amplitude_mean}'
     amplitude_file_name = f'{base_folder}/base_data/mu{noise_mean}/tile_A{sufix}.txt'
     signal_file_name = f'{base_folder}/base_data/mu{noise_mean}/tile_signal{sufix}.txt'
     noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}_no_ped{sufix}.txt'
@@ -42,6 +42,7 @@ def deterministic_matched_filter(noise_mean, tile_partition, sufix=''):
 
 if __name__ == '__main__':
     tile_partition = 'EBA'
+    amplitude_mean = 30
     noise_mean = 30
     channel = 10
-    deterministic_matched_filter(noise_mean, tile_partition, sufix=f'_ch{channel}')
+    deterministic_matched_filter(amplitude_mean, noise_mean, tile_partition, sufix=f'_ch{channel}')

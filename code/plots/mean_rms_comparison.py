@@ -13,8 +13,10 @@ DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
     noise_means = [30, 50, 90]
-    sufix = '_small'
-    base_folder = DIR_PATH + '/../results/hybrid'
+    channel = 36
+    amplitude_mean = 100
+    sufix = f'_ch{channel}'
+    base_folder = DIR_PATH + f'/../results/hybrid/amplitude_mean{amplitude_mean}'
 
     of_means = []
     of_stds = []
@@ -43,7 +45,7 @@ if __name__ == '__main__':
         mf_means.append(np.mean(mf_error))
         mf_stds.append(np.std(mf_error))
 
-    fig, ((ax0, ax1)) = plt.subplots(nrows=1, ncols=2)
+    fig, ((ax0, ax1)) = plt.subplots(nrows=1, ncols=2, figsize=(19,10))
     font = {
             'family': 'Times New Roman',
             'size': 22
@@ -62,7 +64,7 @@ if __name__ == '__main__':
     print(mf_stds)
     # fig.suptitle('OF X MF' ' {} eventos\n A=300, PU=100'
     #              .format(num_events))
-
+    fig.suptitle(f'Comparação das Médias e RMS \n Canal: {channel} Amplitude: {amplitude_mean}')
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
     ax0.set_xlabel('Ruído', **font)

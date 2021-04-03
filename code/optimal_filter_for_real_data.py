@@ -54,10 +54,10 @@ def of_weights():
     return weights
 
 
-def of_calculation(noise_mean, number_of_data, sufix=''):
-    print(f'OF - Processing signal for mean {noise_mean}{sufix}\n')
+def of_calculation(amplitude_mean, oise_mean, number_of_data, sufix=''):
+    print(f'OF - Processing signal for amp{amplitude_mean} and mu {noise_mean}{sufix}\n')
 
-    base_folder = 'results/hybrid'
+    base_folder = f'results/hybrid/amplitude_mean{amplitude_mean}'
     data_folder = f'{base_folder}/base_data/mu{noise_mean}'
     amplitude_file_name = f'{data_folder}/tile_A{sufix}.txt'
     signal_file_name = f'{data_folder}/tile_signal{sufix}.txt'
@@ -80,6 +80,7 @@ def of_calculation(noise_mean, number_of_data, sufix=''):
 
 if __name__ == '__main__':
     tile_partition = 'EBA'
+    amplitude_mean = 30
     noise_mean = 30
     channel = 10
     sufix = f'_ch{channel}'
@@ -91,6 +92,6 @@ if __name__ == '__main__':
     all_noises = pd.read_csv(noise_file_name, sep=" ", usecols=(3, 4, 5, 6, 7, 8, 9), header=None)
     number_of_data = int(len(all_noises) / 2)  # Only half part is needed due to the E-MF 50% training
 
-    of_calculation(noise_mean, number_of_data, sufix=sufix)
+    of_calculation(amplitude_mean, noise_mean, number_of_data, sufix=sufix)
     print('OF Script finished!')
     print(time.time() - t0, "seconds wall time")

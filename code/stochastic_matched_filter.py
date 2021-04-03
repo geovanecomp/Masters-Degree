@@ -10,15 +10,15 @@ from utils import pulse_helper, file_helper
 np.set_printoptions(suppress=True)
 
 
-def mf_calculation(noise_mean, tile_partition, training_percentage=50, sufix=''):
+def mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percentage=50, sufix=''):
     # TEN_BITS_ADC_VALUE = 1023
     ADC_VALUE = 5
     DIMENSION = 7
 
-    print(f'MF - Processing signal for mean {noise_mean}{sufix}\n')
+    print(f'E-MF - Processing signal for amp{amplitude_mean} and mu {noise_mean}{sufix}\n')
 
     # Real data
-    base_folder = 'results/hybrid'
+    base_folder = f'results/hybrid/amplitude_mean{amplitude_mean}'
     data_folder = f'{base_folder}/base_data/mu{noise_mean}'
     amplitude_file_name = f'{data_folder}/tile_A{sufix}.txt'
     signal_file_name = f'{data_folder}/tile_signal{sufix}.txt'
@@ -59,7 +59,8 @@ def mf_calculation(noise_mean, tile_partition, training_percentage=50, sufix='')
     # PCA Part
     pure_signal = np.zeros((qtd_for_testing, DIMENSION))
     for i in range(0, qtd_for_testing):
-        pure_signal[i, :] = ADC_VALUE * np.random.rand(1) * pulse_helper.get_jitter_pulse()
+        jitter_pulse, _ = pulse_helper.get_jitter_pulse()
+        pure_signal[i, :] = ADC_VALUE * np.random.rand(1) * jitter_pulse
 
     pure_signal = pd.DataFrame(pure_signal)
 
@@ -67,7 +68,7 @@ def mf_calculation(noise_mean, tile_partition, training_percentage=50, sufix='')
     pca = PCA(n_components=n_pca_components)
     coeff = pd.DataFrame(pca.fit(pure_signal.dot(W_t)).components_)
     coeff_t = coeff.transpose()
-    Y = pca.explained_variance_.T
+    Y = pca.explained_variance_ratio_.T
 
     # stochastic filter params
     # ddof=1 to use Sampled data variance -> N-1
@@ -177,11 +178,12 @@ def mf_calculation(noise_mean, tile_partition, training_percentage=50, sufix='')
 
 
 if __name__ == '__main__':
-    tile_partition = 'EBA'
-    noise_mean = 30
-    channel = 10
+    tile_partition = 'LBA'
+    amplitude_mean = 30
+    noise_mean = 90
+    channel = 36
     t0 = time.time()
 
-    mf_calculation(noise_mean, tile_partition, training_percentage=50, sufix=f'_ch{channel}')
+    mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percentage=50, sufix=f'_ch{channel}')
     print('MF Script finished!')
     print(time.time() - t0, "seconds wall time")

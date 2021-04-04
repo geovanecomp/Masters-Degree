@@ -11,9 +11,9 @@ DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
     # Real data
-    noise_mean = 90
-    channel = 36
-    amplitude_mean = 100
+    noise_mean = 30
+    channel = 1
+    amplitude_mean = 10
 
     sufix = f'_ch{channel}'
     base_folder = DIR_PATH + f'/../results/hybrid/amplitude_mean{amplitude_mean}'

@@ -19,17 +19,17 @@ if __name__ == '__main__':
     base_folder = DIR_PATH + f'/../results/hybrid/amplitude_mean{amplitude_mean}'
     of_amp_error_file_name = f'{base_folder}/OF/mu{noise_mean}/of_amp_error{sufix}.txt'
     dmf_amp_error_file_name = f'{base_folder}/D_MF/mu{noise_mean}/dmf_amp_error{sufix}.txt'
-    emf_amp_error_file_name = f'{base_folder}/E_MF/mu{noise_mean}/mf_amp_error{sufix}.txt'
+    smf_amp_error_file_name = f'{base_folder}/E_MF/mu{noise_mean}/mf_amp_error{sufix}.txt'
 
     of_amp_error = np.loadtxt(of_amp_error_file_name)
     dmf_amp_error = np.loadtxt(dmf_amp_error_file_name)
-    emf_amp_error = np.loadtxt(emf_amp_error_file_name)
+    smf_amp_error = np.loadtxt(smf_amp_error_file_name)
 
-    if len(of_amp_error) != len(emf_amp_error) or len(emf_amp_error) != len(dmf_amp_error):
+    if len(of_amp_error) != len(smf_amp_error) or len(smf_amp_error) != len(dmf_amp_error):
         print('DIFFERENT DIMENSIONS!!!')
         print(f'OF Amp len: {len(of_amp_error)}')
         print(f'D-MF Amp len: {len(dmf_amp_error)}')
-        print(f'E-MF Amp len: {len(emf_amp_error)}')
+        print(f'S-MF Amp len: {len(smf_amp_error)}')
 
     bins = 200
 
@@ -39,14 +39,11 @@ if __name__ == '__main__':
             'size': 16
             }
 
-    # fig.suptitle('Comparação do erro \n' '{} eventos e Empilhamento de {}%'
-    #              .format(num_events, prob))
-    fig.suptitle(f'Comparação do erro com Ruído Médio = {noise_mean} Canal: {channel} Eventos: {len(of_amp_error)}')
+    fig.suptitle(f'Comparação do erro com Ruído Médio = {noise_mean} Canal: {channel} Amplitude: {amplitude_mean} Eventos: {len(of_amp_error)}')
 
-    # ax0.hist(of_amp_error, bins=bins, range=(-75, 75), color='red', histtype=u'step', label='OF')
     ax0.hist(of_amp_error, bins=bins, range=(-100, 100), color='red', histtype=u'step', label='OF')
     ax0.hist(dmf_amp_error, bins=bins, range=(-100, 100), facecolor='dimgrey', histtype=u'step', label='D-MF')
-    ax0.hist(emf_amp_error, bins=bins, range=(-100, 100), facecolor='blue', histtype=u'step', label='E-MF')
+    ax0.hist(smf_amp_error, bins=bins, range=(-100, 100), facecolor='blue', histtype=u'step', label='S-MF')
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
     ax0.set_title('\nOF ' r'$\mu={}$, $\sigma={}$'
@@ -54,7 +51,7 @@ if __name__ == '__main__':
                   '\nE-MF ' r'$\mu={}$, $\sigma={}$'
                   .format(of_amp_error.mean(), of_amp_error.std(),
                           dmf_amp_error.mean(), dmf_amp_error.std(),
-                          emf_amp_error.mean(), emf_amp_error.std()))
+                          smf_amp_error.mean(), smf_amp_error.std()))
     ax0.set_xlabel('Erro de Estimação', **font)
     ax0.set_ylabel('Eventos', **font)
 

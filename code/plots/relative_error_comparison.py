@@ -12,8 +12,14 @@ DIR_PATH = os.path.dirname(__file__)
 
 
 def _relative_error(exact_value, approx_value):
+    # In a few cases where the len is even and due to the 50% of training,
+    # we may have one last and extra value that can be ignored.
+    if len(exact_value) > len(approx_value):
+        exact_value = np.delete(exact_value, -1)
+    elif len(approx_value) > len(exact_value):
+        approx_value = np.delete(approx_value, -1)
+
     return (approx_value - exact_value) / exact_value
-    # return np.absolute((approx_value - exact_value) / exact_value)
 
 
 def correlation_plot(x, y, ax, method):
@@ -33,9 +39,9 @@ def correlation_plot(x, y, ax, method):
 if "__main__" == __name__:
 
     # Real data
+    amplitude_mean = 10
     noise_mean = 30
-    channel = 36
-    amplitude_mean = 30
+    channel = 1
 
     sufix = f'_ch{channel}'
     base_folder = DIR_PATH + f'/../results/hybrid/amplitude_mean{amplitude_mean}'
@@ -50,13 +56,13 @@ if "__main__" == __name__:
     emf_data = np.loadtxt(emf_amp_file_name)
     reference_data = np.loadtxt(reference_data_file_name)[:len(of_data)]
 
-    of_error = _relative_error(reference_data, of_data)
-    dmf_error = _relative_error(reference_data, dmf_data)
-    emf_error = _relative_error(reference_data, emf_data)
+    of_relative_error = _relative_error(reference_data, of_data)
+    dmf_relative_error = _relative_error(reference_data, dmf_data)
+    emf_relative_error = _relative_error(reference_data, emf_data)
 
     fig, (ax0, ax1, ax2) = plt.subplots(3)
     fig.suptitle(f'Correlação entre Amplitudes \n Ruido: {noise_mean} Canal: {channel} Amplitude: {amplitude_mean}')
-    ax0 = correlation_plot(reference_data, of_error, ax0, method='OF')
-    ax1 = correlation_plot(reference_data, dmf_error, ax1, method='D-MF')
-    ax2 = correlation_plot(reference_data, emf_error, ax2, method='E-MF')
+    ax0 = correlation_plot(reference_data, of_relative_error, ax0, method='OF')
+    ax1 = correlation_plot(reference_data, dmf_relative_error, ax1, method='D-MF')
+    ax2 = correlation_plot(reference_data, emf_relative_error, ax2, method='S-MF')
     plt.show()

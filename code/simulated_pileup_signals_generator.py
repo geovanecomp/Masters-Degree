@@ -69,9 +69,9 @@ def pu_generator(number_of_events, signal_probabilities, pedestal):
         print(f'PU Generator - Processing signal probability:  {signal_probability_percentage}%\n')
 
         x = _base_data(number_of_data, pedestal)
-        pu_indexes = _pileup_indexes(signal_probability, number_of_data)
 
         if signal_probability > 0:
+            pu_indexes = _pileup_indexes(signal_probability, number_of_data)
             for i in range(0, int(signal_probability * number_of_data)):
                 x = _apply_pileup_indexes(i, pu_indexes, x)
 

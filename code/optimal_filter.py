@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import time
 
 from utils import file_helper
 
@@ -53,44 +54,44 @@ def of_weights():
     return weights
 
 
-def of_calculation(num_events, probs):
-    result_prefix = ''
-    # base_folder = 'results/simulated/pileup_data'  # Normal data
-    base_folder = 'results/simulated/base_data'  # Pileup data
-    # For printing and files, probability must be in %.
-    probs = np.array(probs) * 100
+def of_calculation(amplitude_mean, oise_mean, number_of_data, sufix=''):
+    print(f'OF - Processing signal for amp{amplitude_mean} and mu {noise_mean}{sufix}\n')
 
-    for prob in probs:
-        print('OF - Processing signal probability:  {}%\n'.format(prob))
+    base_folder = f'results/hybrid/amplitude_mean{amplitude_mean}'
+    data_folder = f'{base_folder}/base_data/mu{noise_mean}'
+    amplitude_file_name = f'{data_folder}/tile_A{sufix}.txt'
+    signal_file_name = f'{data_folder}/tile_signal{sufix}.txt'
 
-        # Normal data
-        # amplitude_file_name = f'{base_folder}/{qtd_for_training}_events/amplitude.txt'
-        # signal_testing_file_name = f'{base_folder}/{qtd_for_training}_events/signal_testing.txt'
+    amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)[:number_of_data]
+    signal = pd.read_csv(signal_file_name, sep=" ", header=None)[:number_of_data][:]
 
-        # Pileup data
-        amplitude_file_name = f'{base_folder}/prob_{prob}/{qtd_for_training}_events/tile_A_signal_prob_{prob}.txt'
-        signal_testing_file_name = f'{base_folder}/prob_{prob}/{qtd_for_training}_events/tile_signal_prob_{prob}.txt'
+    print(f'Length of amplitudes {len(amplitude)}')
+    print(f'Length of signals {len(signal)}\n')
 
-        amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)
-        signal_testing = pd.read_csv(signal_testing_file_name, sep=" ", header=None)
+    weights = pd.DataFrame([-0.37873481, -0.35634348, 0.17828771, 0.81313877, 0.27867064, -0.20540129, -0.32961754])
 
-        weights = pd.DataFrame([-0.37873481, -0.35634348, 0.17828771, 0.81313877, 0.27867064, -0.20540129, -0.32961754])
+    of_amplitude = signal.dot(weights)
+    amp_error = of_amplitude - amplitude
 
-        if num_events != len(amplitude):
-            print('Dimension error!')
-
-        of_amplitude = signal_testing.dot(weights)
-        amp_error = amplitude - of_amplitude
-
-        folder_name = 'optimal_filter'
-        of_amp_file_name = result_prefix + 'of_amplitude'
-        of_amp_error_file_name = result_prefix + 'of_amp_error'
-        file_helper.save_file(of_amp_file_name, folder_name, of_amplitude)
-        file_helper.save_file(of_amp_error_file_name, folder_name, amp_error)
+    folder_name = f'{base_folder}/OF/mu{noise_mean}'
+    file_helper.save_file_in(f'of_amp_signal{sufix}', folder_name, of_amplitude)
+    file_helper.save_file_in(f'of_amp_error{sufix}', folder_name, amp_error)
 
 
 if __name__ == '__main__':
-    num_events = 10000
-    probs = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    tile_partition = 'EBA'
+    amplitude_mean = 30
+    noise_mean = 30
+    channel = 10
+    sufix = f'_ch{channel}'
+    t0 = time.time()
 
-    of_calculation(num_events, probs)
+    noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}_no_ped{sufix}.txt'
+
+    # Getting data from boundaries
+    all_noises = pd.read_csv(noise_file_name, sep=" ", usecols=(3, 4, 5, 6, 7, 8, 9), header=None)
+    number_of_data = int(len(all_noises) / 2)  # Only half part is needed due to the E-MF 50% training
+
+    of_calculation(amplitude_mean, noise_mean, number_of_data, sufix=sufix)
+    print('OF Script finished!')
+    print(time.time() - t0, "seconds wall time")

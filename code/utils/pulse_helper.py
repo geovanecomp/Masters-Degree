@@ -30,7 +30,8 @@ def get_jitter_pulse():
                 )
             )
 
-    jitter = int(np.random.randint(-25, 25, 1))  # Phase deviation
+    jitter = int(np.random.normal(0, 25, 1))  # Gaussian Phase deviation
+    # jitter = int(np.random.randint(-25, 25, 1))  # Phase deviation
 
     mu, sigma = 0, 0.02  # mean and standard deviation
     # Represents hardware agin or general uncertainty

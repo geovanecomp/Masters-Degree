@@ -11,17 +11,11 @@ DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
 
-    # # Pile data
-    # prob = 50.0/
-    # amplitude_file_name = DIR_PATH + '/../results/pileup_data/prob_{}/{}_events/tile_A_signal_prob_{}.txt'.format(prob, num_events, prob)
-    # of_amp_error_file_name = DIR_PATH + '/../results/optimal_filter/{}_events/pileup_prob_{}_of_amp_error.txt'.format(num_events, prob)
-    # mf_amp_error_file_name = DIR_PATH + '/../results/matched_filter/{}_events/pileup_prob_{}_amp_error.txt'.format(num_events, prob)
-
-    # Real data
-    noise_mean = 30
-    amplitude_file_name = DIR_PATH + '/../results/real_data/mu{}/tile_A.txt'.format(noise_mean)
-    of_amp_error_file_name = DIR_PATH + '/../results/real_data/mu{}/optimal_filter/of_amp_error.txt'.format(noise_mean)
-    mf_amp_error_file_name = DIR_PATH + '/../results/real_data/mu{}/matched_filter/mf_amp_error.txt'.format(noise_mean)
+    # Pile data
+    prob = 50.0
+    amplitude_file_name = DIR_PATH + '/../results/pileup_data/prob_{}/{}_events/tile_A_signal_prob_{}.txt'.format(prob, num_events, prob)
+    of_amp_error_file_name = DIR_PATH + '/../results/optimal_filter/{}_events/pileup_prob_{}_of_amp_error.txt'.format(num_events, prob)
+    mf_amp_error_file_name = DIR_PATH + '/../results/matched_filter/{}_events/pileup_prob_{}_amp_error.txt'.format(num_events, prob)
 
     amplitude = np.loadtxt(amplitude_file_name)
     of_amp_error = np.loadtxt(of_amp_error_file_name)

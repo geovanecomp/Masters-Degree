@@ -23,7 +23,7 @@ if __name__ == '__main__':
     noise_mean = 30
     amp_file_name = DIR_PATH + '/../results/real_data/mu{}/tile_A.txt'.format(noise_mean)
     of_amp_file_name = DIR_PATH + '/../results/real_data/mu{}/optimal_filter/of_amp_signal.txt'.format(noise_mean)
-    mf_amp_file_name = DIR_PATH + '/../results/real_data/mu{}/matched_filter/mf_amp_signal.txt'.format(noise_mean)
+    mf_amp_file_name = DIR_PATH + '/../results/real_data/mu{}/matched_filter/smf_amp_signal.txt'.format(noise_mean)
 
     amplitude = np.loadtxt(amp_file_name)
     of_amplitude = np.loadtxt(of_amp_file_name)

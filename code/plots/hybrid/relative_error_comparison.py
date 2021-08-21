@@ -44,25 +44,25 @@ if "__main__" == __name__:
     channel = 1
 
     sufix = f'_ch{channel}'
-    base_folder = DIR_PATH + f'/../results/hybrid/amplitude_mean{amplitude_mean}'
+    base_folder = DIR_PATH + f'/../../results/hybrid/amplitude_mean{amplitude_mean}'
 
     of_amp_file_name = f'{base_folder}/OF/mu{noise_mean}/of_amp_signal{sufix}.txt'
     dmf_amp_file_name = f'{base_folder}/D_MF/mu{noise_mean}/dmf_amp_signal{sufix}.txt'
-    emf_amp_file_name = f'{base_folder}/E_MF/mu{noise_mean}/mf_amp_signal{sufix}.txt'
+    smf_amp_file_name = f'{base_folder}/S_MF/mu{noise_mean}/smf_amp_signal{sufix}.txt'
     reference_data_file_name = f'{base_folder}/base_data/mu{noise_mean}/tile_A{sufix}.txt'
 
     of_data = np.loadtxt(of_amp_file_name)
     dmf_data = np.loadtxt(dmf_amp_file_name)
-    emf_data = np.loadtxt(emf_amp_file_name)
+    smf_data = np.loadtxt(smf_amp_file_name)
     reference_data = np.loadtxt(reference_data_file_name)[:len(of_data)]
 
     of_relative_error = _relative_error(reference_data, of_data)
     dmf_relative_error = _relative_error(reference_data, dmf_data)
-    emf_relative_error = _relative_error(reference_data, emf_data)
+    smf_relative_error = _relative_error(reference_data, smf_data)
 
     fig, (ax0, ax1, ax2) = plt.subplots(3)
     fig.suptitle(f'Correlação entre Amplitudes \n Ruido: {noise_mean} Canal: {channel} Amplitude: {amplitude_mean}')
     ax0 = correlation_plot(reference_data, of_relative_error, ax0, method='OF')
     ax1 = correlation_plot(reference_data, dmf_relative_error, ax1, method='D-MF')
-    ax2 = correlation_plot(reference_data, emf_relative_error, ax2, method='S-MF')
+    ax2 = correlation_plot(reference_data, smf_relative_error, ax2, method='S-MF')
     plt.show()

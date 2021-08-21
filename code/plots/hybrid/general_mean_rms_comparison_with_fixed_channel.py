@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-"""Compares OF, D-MF, E-MF STD and mean for real data."""
-# results_low_snr_adc_5
+"""Compares OF, D-MF, S-MF STD and mean for real data."""
+
 import os.path
 import numpy as np
 import matplotlib.pyplot as plt
@@ -12,9 +12,9 @@ plt.rcParams['ytick.labelsize'] = 22
 DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
-    noise_means = [30, 50, 90]
     amplitude_means = [10, 100, 300]
     channel = 1
+    noise_means = [30, 50, 90]
     sufix = f'_ch{channel}'
 
     of_means = []
@@ -31,23 +31,23 @@ if __name__ == '__main__':
     dmf_stds_mean = []
     dmf_stds_std = []
 
-    mf_means = []
-    mf_stds = []
-    mf_means_mean = []
-    mf_means_std = []
-    mf_stds_mean = []
-    mf_stds_std = []
+    smf_means = []
+    smf_stds = []
+    smf_means_mean = []
+    smf_means_std = []
+    smf_stds_mean = []
+    smf_stds_std = []
 
     for amplitude_mean in amplitude_means:
-        base_folder = DIR_PATH + f'/../results/hybrid/amplitude_mean{amplitude_mean}'
+        base_folder = DIR_PATH + f'/../../results/hybrid/amplitude_mean{amplitude_mean}'
         for noise_mean in noise_means:
             of_file_name = base_folder + f'/OF/mu{noise_mean}/of_amp_error{sufix}.txt'
             dmf_file_name = base_folder + f'/D_MF/mu{noise_mean}/dmf_amp_error{sufix}.txt'
-            mf_file_name = base_folder + f'/E_MF/mu{noise_mean}/mf_amp_error{sufix}.txt'
+            smf_file_name = base_folder + f'/S_MF/mu{noise_mean}/smf_amp_error{sufix}.txt'
 
             of_error = np.loadtxt(of_file_name)
             dmf_error = np.loadtxt(dmf_file_name)
-            mf_error = np.loadtxt(mf_file_name)
+            smf_error = np.loadtxt(smf_file_name)
 
             of_means.append(np.mean(of_error))
             of_stds.append(np.std(of_error))
@@ -55,23 +55,23 @@ if __name__ == '__main__':
             dmf_means.append(np.mean(dmf_error))
             dmf_stds.append(np.std(dmf_error))
 
-            mf_means.append(np.mean(mf_error))
-            mf_stds.append(np.std(mf_error))
+            smf_means.append(np.mean(smf_error))
+            smf_stds.append(np.std(smf_error))
 
         of_means_mean.append(np.mean(of_means))
         of_means_std.append(np.std(of_means))
         of_stds_mean.append(np.mean(of_stds))
         of_stds_std.append(np.std(of_stds))
 
-        dmf_means_mean.append(np.mean(mf_means))
-        dmf_means_std.append(np.std(mf_means))
-        dmf_stds_mean.append(np.mean(mf_stds))
-        dmf_stds_std.append(np.std(mf_stds))
+        dmf_means_mean.append(np.mean(dmf_means))
+        dmf_means_std.append(np.std(dmf_means))
+        dmf_stds_mean.append(np.mean(dmf_stds))
+        dmf_stds_std.append(np.std(dmf_stds))
 
-        mf_means_mean.append(np.mean(mf_means))
-        mf_means_std.append(np.std(mf_means))
-        mf_stds_mean.append(np.mean(mf_stds))
-        mf_stds_std.append(np.std(mf_stds))
+        smf_means_mean.append(np.mean(smf_means))
+        smf_means_std.append(np.std(smf_means))
+        smf_stds_mean.append(np.mean(smf_stds))
+        smf_stds_std.append(np.std(smf_stds))
 
     fig, ((ax0, ax1)) = plt.subplots(nrows=1, ncols=2)
     font = {
@@ -87,11 +87,10 @@ if __name__ == '__main__':
     print(dmf_means_mean)
     print(dmf_stds_mean)
 
-    print('EMF: \n')
-    print(mf_means_mean)
-    print(mf_stds_mean)
-    # fig.suptitle('OF X MF' ' {} eventos\n A=300, PU=100'
-    #              .format(num_events))
+    print('SMF: \n')
+    print(smf_means_mean)
+    print(smf_stds_mean)
+
     fig.suptitle(f'Errorbar para mu: {noise_means} Canal: {channel}')
     x_ticks = [10, 100, 300]
     ax0.legend(prop={'size': 10})
@@ -100,7 +99,7 @@ if __name__ == '__main__':
     ax0.set_ylabel('Média', **font)
     ax0.errorbar(amplitude_means, of_means_mean, c='r', marker='o', yerr=of_means_std, label='DP-OF',ls='None')
     ax0.errorbar(amplitude_means, dmf_means_mean, c='b', marker='s', yerr=dmf_means_std, label='DP-MF',ls='None')
-    ax0.errorbar(amplitude_means, mf_means_mean, c='g', marker='_', yerr=mf_means_std, label='DP-MF',ls='None')
+    ax0.errorbar(amplitude_means, smf_means_mean, c='g', marker='_', yerr=smf_means_std, label='DP-MF',ls='None')
     ax0.legend(loc='upper left', fontsize=21)
     ax0.set_xticks(x_ticks)
 
@@ -110,7 +109,7 @@ if __name__ == '__main__':
     ax1.set_ylabel('RMS', **font)
     ax1.errorbar(amplitude_means, of_stds_mean, c='r', marker='o', yerr=of_stds_std, label='DP-OF', ls='None')
     ax1.errorbar(amplitude_means, dmf_stds_mean, c='b', marker='s', yerr=dmf_stds_std, label='DP-MF', ls='None')
-    ax1.errorbar(amplitude_means, mf_stds_mean, c='g', marker='_', yerr=mf_stds_std, label='DP-MF', ls='None')
+    ax1.errorbar(amplitude_means, smf_stds_mean, c='g', marker='_', yerr=smf_stds_std, label='DP-MF', ls='None')
     ax1.legend(loc='upper left', fontsize=21)
     ax1.set_xticks(x_ticks)
 

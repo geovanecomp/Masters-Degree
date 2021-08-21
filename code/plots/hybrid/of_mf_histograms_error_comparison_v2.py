@@ -11,15 +11,15 @@ DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
     # Real data
-    noise_mean = 30
-    channel = 1
     amplitude_mean = 10
+    channel = 1
+    noise_mean = 30
 
     sufix = f'_ch{channel}'
-    base_folder = DIR_PATH + f'/../results/hybrid/amplitude_mean{amplitude_mean}'
+    base_folder = DIR_PATH + f'/../../results/hybrid/amplitude_mean{amplitude_mean}'
     of_amp_error_file_name = f'{base_folder}/OF/mu{noise_mean}/of_amp_error{sufix}.txt'
     dmf_amp_error_file_name = f'{base_folder}/D_MF/mu{noise_mean}/dmf_amp_error{sufix}.txt'
-    smf_amp_error_file_name = f'{base_folder}/E_MF/mu{noise_mean}/mf_amp_error{sufix}.txt'
+    smf_amp_error_file_name = f'{base_folder}/S_MF/mu{noise_mean}/smf_amp_error{sufix}.txt'
 
     of_amp_error = np.loadtxt(of_amp_error_file_name)
     dmf_amp_error = np.loadtxt(dmf_amp_error_file_name)
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     ax0.grid(axis='y', alpha=0.75)
     ax0.set_title('\nOF ' r'$\mu={}$, $\sigma={}$'
                   '\nD-MF ' r'$\mu={}$, $\sigma={}$'
-                  '\nE-MF ' r'$\mu={}$, $\sigma={}$'
+                  '\nS-MF ' r'$\mu={}$, $\sigma={}$'
                   .format(of_amp_error.mean(), of_amp_error.std(),
                           dmf_amp_error.mean(), dmf_amp_error.std(),
                           smf_amp_error.mean(), smf_amp_error.std()))

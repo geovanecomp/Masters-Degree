@@ -43,21 +43,19 @@ def _compute_relative_mean_per_phase(jitters, errors):
 
 
 if "__main__" == __name__:
-
-    # Hybrid data
     amplitude_mean = 10
-    noise_mean = 30
     channel = 1
+    noise_mean = 30
 
     sufix = f'_ch{channel}'
-    base_folder = DIR_PATH + f'/../results/hybrid/amplitude_mean{amplitude_mean}'
+    base_folder = DIR_PATH + f'/../../results/hybrid/amplitude_mean{amplitude_mean}'
 
     of_amp_file_name = f'{base_folder}/OF/mu{noise_mean}/of_amp_error{sufix}.txt'
     dmf_amp_file_name = f'{base_folder}/D_MF/mu{noise_mean}/dmf_amp_error{sufix}.txt'
-    emf_amp_file_name = f'{base_folder}/E_MF/mu{noise_mean}/mf_amp_error{sufix}.txt'
+    smf_amp_file_name = f'{base_folder}/S_MF/mu{noise_mean}/smf_amp_error{sufix}.txt'
     of_error = np.loadtxt(of_amp_file_name)
     dmf_error = np.loadtxt(dmf_amp_file_name)
-    emf_error = np.loadtxt(emf_amp_file_name)
+    smf_error = np.loadtxt(smf_amp_file_name)
 
     reference_jitter = f'{base_folder}/base_data/mu{noise_mean}/jitter{sufix}.txt'
 
@@ -67,7 +65,7 @@ if "__main__" == __name__:
 
     phase_means_of, phase_stds_of, std_error_bar_of = _compute_relative_mean_per_phase(jitter_data, of_error)
     phase_means_dmf, phase_stds_dmf, std_error_bar_dmf = _compute_relative_mean_per_phase(jitter_data, dmf_error)
-    phase_means_emf, phase_stds_emf, std_error_bar_emf = _compute_relative_mean_per_phase(jitter_data, emf_error)
+    phase_means_smf, phase_stds_smf, std_error_bar_smf = _compute_relative_mean_per_phase(jitter_data, smf_error)
     print(time.time() - t0, "seconds wall time")
 
     fig, ((ax0, ax1)) = plt.subplots(nrows=1, ncols=2)
@@ -76,7 +74,7 @@ if "__main__" == __name__:
     ax0.set_title('Média')
     ax0.errorbar(phase_means_of.keys(), phase_means_of.values(), c='r', marker='.', yerr=std_error_bar_of.values(), label='OF', ls='None')
     ax0.errorbar(phase_means_dmf.keys(), phase_means_dmf.values(), c='g', marker='x', yerr=std_error_bar_dmf.values(), label='D-MF', ls='None')
-    ax0.errorbar(phase_means_emf.keys(), phase_means_emf.values(), c='b', marker='+', yerr=std_error_bar_emf.values(), label='E-MF', ls='None')
+    ax0.errorbar(phase_means_smf.keys(), phase_means_smf.values(), c='b', marker='+', yerr=std_error_bar_smf.values(), label='S-MF', ls='None')
 
     ax0.grid(alpha=0.75)
     ax0.set_xlabel('Fase')
@@ -87,7 +85,7 @@ if "__main__" == __name__:
     ax1.set_title('RMS')
     ax1.plot(phase_stds_of.keys(), phase_stds_of.values(), 'r.', label='OF')
     ax1.plot(phase_stds_dmf.keys(), phase_stds_dmf.values(), 'gx', label='D-MF')
-    ax1.plot(phase_stds_emf.keys(), phase_stds_emf.values(), 'b+', label='S-MF')
+    ax1.plot(phase_stds_smf.keys(), phase_stds_smf.values(), 'b+', label='S-MF')
     ax1.grid(alpha=0.75)
     ax1.set_xlabel('Fase')
     ax1.set_ylabel('Contagens de ADC')

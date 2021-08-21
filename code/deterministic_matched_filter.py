@@ -33,7 +33,7 @@ def deterministic_matched_filter(amplitude_mean, noise_mean, tile_partition, suf
     S_t = S.T
 
     dmf_amplitude = ((R.dot(C_i)).dot(S)) / ((S_t.dot(C_i)).dot(S))[0]
-    amp_error = amplitude - dmf_amplitude
+    amp_error = dmf_amplitude - amplitude
 
     folder_name = f'{base_folder}/D_MF/mu{noise_mean}'
     file_helper.save_file_in(f'dmf_amp_signal{sufix}', folder_name, dmf_amplitude)

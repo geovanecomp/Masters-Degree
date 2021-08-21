@@ -96,7 +96,7 @@ if __name__ == '__main__':
     x_ticks = [30, 50, 90]
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
-    ax0.set_xlabel('Amplitude', **font)
+    ax0.set_xlabel('noiseMean', **font)
     ax0.set_ylabel('Média', **font)
     ax0.errorbar(noise_means, of_means_mean, c='r', marker='o', yerr=of_means_std, label='DP-OF',ls='None')
     ax0.errorbar(noise_means, dmf_means_mean, c='b', marker='s', yerr=dmf_means_std, label='DP-MF',ls='None')
@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
-    ax1.set_xlabel('Amplitude', **font)
+    ax1.set_xlabel('noiseMean', **font)
     ax1.set_ylabel('RMS', **font)
     ax1.errorbar(noise_means, of_stds_mean, c='r', marker='o', yerr=of_stds_std, label='DP-OF', ls='None')
     ax1.errorbar(noise_means, dmf_stds_mean, c='b', marker='s', yerr=dmf_stds_std, label='DP-MF', ls='None')

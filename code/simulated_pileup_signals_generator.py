@@ -93,12 +93,11 @@ def pu_generator(number_of_events, signal_probabilities, pedestal):
             jitters[i][1:number_of_jitter_info] = jitter_pulse
 
         # Stores mixed signal and amplitude
-        prob_file_name = f'_prob_{signal_probability_percentage}'
-        file_helper.save_file_in(f'tile_signal{prob_file_name}', folder_name, pu_signals)
-        file_helper.save_file_in(f'tile_A{prob_file_name}', folder_name, A)
+        file_helper.save_file_in('tile_signal', folder_name, pu_signals)
+        file_helper.save_file_in('tile_A', folder_name, A)
 
         # Its important to store jitter and use the same values across methods
-        _save_jitter_file(f'jitter{prob_file_name}', folder_name, jitters)
+        _save_jitter_file('jitter', folder_name, jitters)
         level += 1
 
 

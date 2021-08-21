@@ -71,7 +71,7 @@ def of_calculation(amplitude_mean, oise_mean, number_of_data, sufix=''):
     weights = pd.DataFrame([-0.37873481, -0.35634348, 0.17828771, 0.81313877, 0.27867064, -0.20540129, -0.32961754])
 
     of_amplitude = signal.dot(weights)
-    amp_error = amplitude - of_amplitude
+    amp_error = of_amplitude - amplitude
 
     folder_name = f'{base_folder}/OF/mu{noise_mean}'
     file_helper.save_file_in(f'of_amp_signal{sufix}', folder_name, of_amplitude)

@@ -47,6 +47,6 @@ def deterministic_matched_filter(number_of_events, probs):
 
 
 if __name__ == '__main__':
-    number_of_events = 100000
+    number_of_events = 100
     probs = [0.0, 0.1, 0.5, 1.0]
     deterministic_matched_filter(number_of_events, probs)

@@ -53,44 +53,36 @@ def of_weights():
     return weights
 
 
-def of_calculation(num_events, probs):
-    result_prefix = ''
-    # base_folder = 'results/simulated/pileup_data'  # Normal data
-    base_folder = 'results/simulated/base_data'  # Pileup data
+def of_calculation(number_of_events, probs):
+    base_folder = 'results/simulated/pileup_data'
+    number_of_data = number_of_events * 2  # Due to the 50% training of E-MF.
+
     # For printing and files, probability must be in %.
     probs = np.array(probs) * 100
 
     for prob in probs:
-        print('OF - Processing signal probability:  {}%\n'.format(prob))
-
-        # Normal data
-        # amplitude_file_name = f'{base_folder}/{qtd_for_training}_events/amplitude.txt'
-        # signal_testing_file_name = f'{base_folder}/{qtd_for_training}_events/signal_testing.txt'
+        print(f'Simulated OF - Processing {number_of_events} events for signal for probability {prob}\n')
 
         # Pileup data
-        amplitude_file_name = f'{base_folder}/prob_{prob}/{qtd_for_training}_events/tile_A_signal_prob_{prob}.txt'
-        signal_testing_file_name = f'{base_folder}/prob_{prob}/{qtd_for_training}_events/tile_signal_prob_{prob}.txt'
+        base_data = f'{base_folder}/prob_{prob}/{number_of_data}_events'
+        amplitude_file_name = f'{base_data}/base_data/tile_A.txt'
+        signal_file_name = f'{base_data}/base_data/tile_signal.txt'
 
-        amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)
-        signal_testing = pd.read_csv(signal_testing_file_name, sep=" ", header=None)
+        amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)[:number_of_events]
+        signal = pd.read_csv(signal_file_name, sep=" ", header=None)[:number_of_events][:]
 
         weights = pd.DataFrame([-0.37873481, -0.35634348, 0.17828771, 0.81313877, 0.27867064, -0.20540129, -0.32961754])
 
-        if num_events != len(amplitude):
-            print('Dimension error!')
+        of_amplitude = signal.dot(weights)
+        amp_error = of_amplitude - amplitude
 
-        of_amplitude = signal_testing.dot(weights)
-        amp_error = amplitude - of_amplitude
-
-        folder_name = 'optimal_filter'
-        of_amp_file_name = result_prefix + 'of_amplitude'
-        of_amp_error_file_name = result_prefix + 'of_amp_error'
-        file_helper.save_file(of_amp_file_name, folder_name, of_amplitude)
-        file_helper.save_file(of_amp_error_file_name, folder_name, amp_error)
+        folder_name = f'{base_data}/OF'
+        file_helper.save_file_in('of_amp_signal', folder_name, of_amplitude)
+        file_helper.save_file_in('of_amp_error', folder_name, amp_error)
 
 
 if __name__ == '__main__':
-    num_events = 10000
-    probs = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    number_of_events = 100
+    probs = [0.0, 0.1, 0.5, 1.0]
 
-    of_calculation(num_events, probs)
+    of_calculation(number_of_events, probs)

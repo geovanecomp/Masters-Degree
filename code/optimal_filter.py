@@ -54,7 +54,7 @@ def of_weights():
     return weights
 
 
-def of_calculation(amplitude_mean, oise_mean, number_of_data, sufix=''):
+def of_calculation(amplitude_mean, noise_mean, number_of_data, sufix=''):
     print(f'OF - Processing signal for amp{amplitude_mean} and mu {noise_mean}{sufix}\n')
 
     base_folder = f'results/hybrid/amplitude_mean{amplitude_mean}'

@@ -3,11 +3,6 @@
 import numpy as np
 
 
-# To be implemented
-def get_pulse_paper_COF():
-    pass
-
-
 # Generates a deformation pulse. It can represents for example hardware aging.
 def get_jitter_pulse():
     base_pulse = np.loadtxt('data/pulsehi_physics.txt')

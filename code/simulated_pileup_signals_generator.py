@@ -35,23 +35,30 @@ def _pileup():
 # Pileup should be added in the position "i" and then in its corners.
 # for exemple, for n=100, i=97, and a 7th dimension signal we will have pileup
 # added at positions 94, 95, 96, 97, 98, 99, 100
-# TODO: Improve these magic numbers.
 def _apply_pileup_indexes(i, pu_indexes, x):
     jitter_pulse, _ = pulse_helper.get_jitter_pulse()
     pu = np.multiply(_pileup(), jitter_pulse)
     number_of_data = len(x)
 
-    # Start checking ther corners
-    if pu_indexes[i] < 4:
-        for j in range(pu_indexes[i] - 2, 3):
-            x[pu_indexes[i] + j] = x[pu_indexes[i] + j] + pu[j + 4]
+    first_pu_index = -3
+    last_pu_index = 3
+    index_in_left_corner = pu_indexes[i] <= 3
+    index_in_right_corner = pu_indexes[i] >= (number_of_data - 3)
+    off_set = 3
 
-    elif pu_indexes[i] > (number_of_data - 3):
-        for j in range(-4, number_of_data - pu_indexes[i]):
-            x[pu_indexes[i] + j] = x[pu_indexes[i] + j] + pu[j + 4]
+    # Start checking the corners 1st. then all intermediary values
+    # Besides that, for cases when i=0 being the central value, j can be
+    # -3, -2 or -1 sometimes, that is why we have "j+off_set", to fix this.
+    if index_in_left_corner:
+        for j in range(pu_indexes[i] - off_set, last_pu_index):
+            x[pu_indexes[i] + j] = x[pu_indexes[i] + j] + pu[j + off_set]
+
+    elif index_in_right_corner:
+        for j in range(first_pu_index, number_of_data - pu_indexes[i]):
+            x[pu_indexes[i] + j] = x[pu_indexes[i] + j] + pu[j + off_set]
     else:
-        for j in range(-4, 3):
-            x[pu_indexes[i] + j] = x[pu_indexes[i] + j] + pu[j + 4]
+        for j in range(first_pu_index, last_pu_index):
+            x[pu_indexes[i] + j] = x[pu_indexes[i] + j] + pu[j + off_set]
     return x
 
 
@@ -68,10 +75,9 @@ def pu_generator(number_of_events, signal_probabilities, pedestal):
         # In this case we are considering 1ADC=10MeV (instead of 12MeV)
         signal_mean = 300  # Exponential signal mean
 
-        print(f'PU Generator - Processing signal probability:  {signal_probability_percentage}%\n')
+        print(f'PU {number_of_events} events Generator - Processing signal probability:  {signal_probability_percentage}%\n')
 
         x = _base_data(number_of_data, pedestal)
-
         if signal_probability > 0:
             pu_indexes = _pileup_indexes(signal_probability, number_of_data)
             for i in range(0, int(signal_probability * number_of_data)):
@@ -108,7 +114,7 @@ if __name__ == '__main__':
     # Example: 0.5 equals 50% of chance of receiving a signal in a collision.
     # We can use an array to generate signas for several probabilities.
     # signal_probabilities = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    signal_probabilities = [0.0, 0.5, 1.0]
+    signal_probabilities = [0.0, 0.1, 0.5, 1.0]
     number_of_events = 200
     pedestal = 0
 

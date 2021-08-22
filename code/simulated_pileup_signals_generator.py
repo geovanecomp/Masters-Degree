@@ -64,6 +64,8 @@ def pu_generator(number_of_events, signal_probabilities, pedestal):
     for level in range(0, len(signal_probabilities)):
         signal_probability = signal_probabilities[level]  # Signal_probability
         signal_probability_percentage = signal_probability * 100
+        # 300 ADC when converted to MeV it is equal to 3000MeV = 3GeV
+        # In this case we are considering 1ADC=10MeV (instead of 12MeV)
         signal_mean = 300  # Exponential signal mean
 
         print(f'PU Generator - Processing signal probability:  {signal_probability_percentage}%\n')
@@ -81,8 +83,8 @@ def pu_generator(number_of_events, signal_probabilities, pedestal):
         pu_signals = np.empty_like(pu_data)
 
         # Stores Noise Data
-        folder_name = f'{base_folder}/prob_{signal_probability_percentage}/{number_of_events}_events'
-        file_helper.save_file_in(f'noise_{signal_probability_percentage}', folder_name, pu_data)
+        folder_name = f'{base_folder}/prob_{signal_probability_percentage}/{number_of_events}_events/base_data'
+        file_helper.save_file_in('noise', folder_name, pu_data)
 
         A = np.zeros(number_of_events)  # Amplitude
         for i in range(0, number_of_events):
@@ -107,7 +109,7 @@ if __name__ == '__main__':
     # We can use an array to generate signas for several probabilities.
     # signal_probabilities = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     signal_probabilities = [0.0, 0.5, 1.0]
-    number_of_events = 100
+    number_of_events = 200
     pedestal = 0
 
     pu_generator(number_of_events, signal_probabilities, pedestal)

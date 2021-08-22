@@ -20,7 +20,7 @@ def mf_calculation(number_of_data, pedestal, probs, training_percentage=50):
 
     for prob in probs:
         base_data = f'{base_folder}/prob_{prob}/{number_of_data}_events'
-        print(f'Simulated S-MF - Processing signal for probability {prob}\n')
+        print(f'Simulated S-MF - Processing {number_of_data} events for signal for probability {prob}\n')
 
         amplitude_file_name = f'{base_data}/base_data/tile_A.txt'
         signal_file_name = f'{base_data}/base_data/tile_signal.txt'
@@ -38,11 +38,6 @@ def mf_calculation(number_of_data, pedestal, probs, training_percentage=50):
 
         noise_testing = noise[:qtd_for_testing][:]  # test with 1st % part
         noise_training = noise[qtd_for_training:][:]  # train with 2nd % part
-
-        print(f'Training with {len(noise_training)} events')
-        print(f'Testing with {len(noise_testing)} events')
-        print(f'Length of amplitudes {len(amplitude)}')
-        print(f'Length of signals {len(signal_testing)}\n')
 
         # Branqueamento
         noise_train_cov = noise_training.cov()
@@ -172,10 +167,10 @@ def mf_calculation(number_of_data, pedestal, probs, training_percentage=50):
 
 
 if __name__ == '__main__':
-    number_of_data = 200
+    number_of_data = 200000
     pedestal = 0
     # probs = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    probs = [0.0, 0.5, 1.0]
+    probs = [0.0, 0.1, 0.5, 1.0]
 
     t0 = time.time()
     mf_calculation(number_of_data, pedestal, probs, training_percentage=50)

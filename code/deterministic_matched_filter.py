@@ -16,7 +16,7 @@ def deterministic_matched_filter(amplitude_mean, noise_mean, tile_partition, suf
 
     # Getting data from boundaries
     all_noises = pd.read_csv(noise_file_name, sep=" ", usecols=(3, 4, 5, 6, 7, 8, 9), header=None)
-    number_of_data = int(len(all_noises) / 2)  # Only half part is needed due to the E-MF 50% training
+    number_of_data = int(len(all_noises) / 2)  # Only half part is needed due to the S-MF 50% training
 
     amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)[:number_of_data]
     signal_testing = pd.read_csv(signal_file_name, sep=" ", header=None)[:number_of_data][:]

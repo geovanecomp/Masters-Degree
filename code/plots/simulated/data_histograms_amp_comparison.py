@@ -11,11 +11,11 @@ if __name__ == '__main__':
     num_events = 200
 
     # Pile data
-    common_path = DIR_PATH + f'/../../results/simulated/pileup_data/prob_{prob}/{num_events}_events'
-    true_amplitude_file_name = common_path + '/base_data/tile_A.txt'
-    of_amplitude_file_name = common_path + '/OF/of_amp_signal.txt'
-    dmf_amplitude_file_name = common_path + '/D_MF/dmf_amp_signal.txt'
-    smf_amplitude_file_name = common_path + '/S_MF/smf_amp_signal.txt'
+    BASE_PATH = DIR_PATH + f'/../../results/simulated/pileup_data/prob_{prob}/{num_events}_events'
+    true_amplitude_file_name = BASE_PATH + '/base_data/tile_A.txt'
+    of_amplitude_file_name = BASE_PATH + '/OF/of_amp_signal.txt'
+    dmf_amplitude_file_name = BASE_PATH + '/D_MF/dmf_amp_signal.txt'
+    smf_amplitude_file_name = BASE_PATH + '/S_MF/smf_amp_signal.txt'
 
     true_amplitude = np.loadtxt(true_amplitude_file_name)[:int(num_events/2)]
     of_amplitude = np.loadtxt(of_amplitude_file_name)

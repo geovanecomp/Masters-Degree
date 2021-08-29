@@ -62,7 +62,7 @@ def _apply_pileup_indexes(i, pu_indexes, x):
     return x
 
 
-def pu_generator(number_of_events, signal_probabilities, pedestal):
+def pu_generator(number_of_events, signal_probabilities, pedestal=0):
     number_of_data = TILECAL_NUMBER_OF_CHANNELS * number_of_events
     base_folder = 'results/simulated/pileup_data'
     number_of_jitter_info = TILECAL_NUMBER_OF_CHANNELS + 1

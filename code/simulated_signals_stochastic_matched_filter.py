@@ -10,7 +10,7 @@ from utils import pulse_helper, file_helper
 np.set_printoptions(suppress=True)
 
 
-def mf_calculation(number_of_data, pedestal, probs, training_percentage=50):
+def smf_calculation(number_of_data, probs, pedestal=0, training_percentage=50):
     # TEN_BITS_ADC_VALUE = 1023
     ADC_VALUE = 5
     DIMENSION = 7
@@ -28,7 +28,6 @@ def mf_calculation(number_of_data, pedestal, probs, training_percentage=50):
 
         noise = pd.read_csv(noise_file_name, sep=" ", header=None)
 
-        number_of_data = len(noise)
         qtd_for_training = int(number_of_data / ((100 / training_percentage)))
         qtd_for_testing = number_of_data - qtd_for_training
 
@@ -173,6 +172,6 @@ if __name__ == '__main__':
     probs = [0.0, 0.1, 0.5, 1.0]
 
     t0 = time.time()
-    mf_calculation(number_of_data, pedestal, probs, training_percentage=50)
+    smf_calculation(number_of_data, probs, pedestal, training_percentage=50)
     print('MF Script finished!')
     print(time.time() - t0, "seconds wall time")

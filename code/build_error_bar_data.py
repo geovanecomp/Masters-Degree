@@ -1,16 +1,17 @@
 import numpy as np
 
-from pileup_signals_generator import pu_generator
-from matched_filter import mf_calculation
-from optimal_filter import of_calculation
+from simulated_pileup_signals_generator import pu_generator
+from simulated_signals_stochastic_matched_filter import smf_calculation
+from simulated_signals_deterministic_matched_filter import dmf_calculation
+from simulated_signals_optimal_filter import of_calculation
 
 np.set_printoptions(suppress=True)
 
-BASE_FOLER = 'results/simulated'
+BASE_FOLER = 'results/simulated/pileup_data'
 
 
 def _save_file(file_name, file_folder, num_events, data):
-    fileText = f'BASE_FOLER/{file_folder}/{num_events}_events/{file_name}.txt'
+    fileText = f'{BASE_FOLER}/{file_folder}/{num_events}_events/{file_name}.txt'
 
     np.savetxt(
         fileText,
@@ -21,68 +22,89 @@ def _save_file(file_name, file_folder, num_events, data):
 
 if __name__ == '__main__':
     num_runs = 10
-    num_data = 20000
+    num_data = 200000
     training_percentage = 50
     num_events = int(num_data / (100 / training_percentage))
-    pedestal = 30
+
     # probs = [0.0, 1.0]
     probs = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    probs_percentage = np.array(probs) * 100
 
     of_stds = dict.fromkeys(probs, 0)
     of_means = dict.fromkeys(probs, 0)
 
-    mf_stds = dict.fromkeys(probs, 0)
-    mf_means = dict.fromkeys(probs, 0)
+    smf_stds = dict.fromkeys(probs, 0)
+    smf_means = dict.fromkeys(probs, 0)
+
+    dmf_stds = dict.fromkeys(probs, 0)
+    dmf_means = dict.fromkeys(probs, 0)
 
     _of_stds = []
     _of_means = []
 
-    _mf_stds = []
-    _mf_means = []
+    _smf_stds = []
+    _smf_means = []
+
+    _dmf_stds = []
+    _dmf_means = []
 
     for prob in probs:
-        # print('Processing signal probability:  {}%\n'.format(prob))
+        print('Processing signal probability:  {}%\n\n\n'.format(prob))
         for i in range(0, num_runs):
             # print('Execution number: {}\n'.format(i))
 
             # Generates a new data set for MF graph error
-            pu_generator(num_events, [prob])
+            pu_generator(num_data, [prob])
 
             of_calculation(num_events, [prob])
-            mf_calculation(num_data, pedestal, [prob], training_percentage)
+            smf_calculation(num_data, [prob])
+            dmf_calculation(num_events, [prob])
 
-            of_error_file_name = f'{BASE_FOLER}/optimal_filter/{num_events}_events/pileup_prob_{prob * 100}_of_amp_error.txt'
-            mf_error_file_name = f'{BASE_FOLER}/matched_filter/{num_events}_events/pileup_prob_{prob * 100}_amp_error.txt'
+            of_error_file_name = f'{BASE_FOLER}/prob_{prob * 100}/{num_data}_events/OF/of_amp_error.txt'
+            smf_error_file_name = f'{BASE_FOLER}/prob_{prob * 100}/{num_data}_events/S_MF/smf_amp_error.txt'
+            dmf_error_file_name = f'{BASE_FOLER}/prob_{prob * 100}/{num_data}_events/D_MF/dmf_amp_error.txt'
+
             of_error = np.loadtxt(of_error_file_name)
-            mf_error = np.loadtxt(mf_error_file_name)
+            smf_error = np.loadtxt(smf_error_file_name)
+            dmf_error = np.loadtxt(dmf_error_file_name)
 
             _of_means.append(np.mean(of_error))
             _of_stds.append(np.std(of_error))
 
-            _mf_means.append(np.mean(mf_error))
-            _mf_stds.append(np.std(mf_error))
+            _smf_means.append(np.mean(smf_error))
+            _smf_stds.append(np.std(smf_error))
+
+            _dmf_means.append(np.mean(dmf_error))
+            _dmf_stds.append(np.std(dmf_error))
 
         of_means[prob] = _of_means
         of_stds[prob] = _of_stds
 
-        mf_means[prob] = _mf_means
-        mf_stds[prob] = _mf_stds
+        smf_means[prob] = _smf_means
+        smf_stds[prob] = _smf_stds
+
+        dmf_means[prob] = _dmf_means
+        dmf_stds[prob] = _dmf_stds
 
         _of_stds = []
         _of_means = []
-        _mf_stds = []
-        _mf_means = []
+        _smf_stds = []
+        _smf_means = []
+        _dmf_stds = []
+        _dmf_means = []
 
     folder_name = 'error_bar'
     prefix = '{}_runs_'.format(num_runs)
     of_prefix = prefix + 'of_'
-    mf_prefix = prefix + 'mf_'
+    smf_prefix = prefix + 'smf_'
+    dmf_prefix = prefix + 'dmf_'
 
     for prob in probs:
         sufix = '_prob_{}'.format(prob * 100)
-        _save_file(of_prefix + 'std' + sufix, folder_name, num_events, of_stds[prob])
-        _save_file(of_prefix + 'mean' + sufix, folder_name, num_events, of_means[prob])
+        _save_file(of_prefix + 'std' + sufix, folder_name, num_data, of_stds[prob])
+        _save_file(of_prefix + 'mean' + sufix, folder_name, num_data, of_means[prob])
 
-        _save_file(mf_prefix + 'std' + sufix, folder_name, num_events, mf_stds[prob])
-        _save_file(mf_prefix + 'mean' + sufix, folder_name, num_events, mf_means[prob])
+        _save_file(smf_prefix + 'std' + sufix, folder_name, num_data, smf_stds[prob])
+        _save_file(smf_prefix + 'mean' + sufix, folder_name, num_data, smf_means[prob])
+
+        _save_file(dmf_prefix + 'std' + sufix, folder_name, num_data, dmf_stds[prob])
+        _save_file(dmf_prefix + 'mean' + sufix, folder_name, num_data, dmf_means[prob])

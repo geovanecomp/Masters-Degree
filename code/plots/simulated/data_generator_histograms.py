@@ -7,19 +7,20 @@ import matplotlib.pyplot as plt
 DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
-    num_events = 10000
+    num_events = 200000
+    prob = 100.0
 
     # Signals
-    matlab_data = np.loadtxt(DIR_PATH + '/../matlab_code/results/matlabSignals/{}dadosTileOcup50.txt'.format(num_events))
-    script_data = np.loadtxt(DIR_PATH + '/../results/pileup_data/prob_50.0/{}_events/tile_signal_prob_50.0.txt'.format(num_events))
+    matlab_data = np.loadtxt(DIR_PATH + f'/../../matlab_code/results/matlabSignals/{int(num_events/2)}dadosTileOcup{int(prob)}.txt')
+    script_data = np.loadtxt(DIR_PATH + f'/../../results/simulated/pileup_data/prob_{prob}/{num_events}_events/base_data/tile_signal.txt')
 
     # Noises
-    # matlab_data = np.loadtxt(DIR_PATH + '/../matlab_code/results/matlabNoises/{}ruidoTileOcup0.txt'.format(num_events))
-    # script_data = np.loadtxt(DIR_PATH + '/../results/pileup_data/prob_0.0/{}_events/tile_noise_prob_0.0.txt'.format(num_events))
+    # matlab_data = np.loadtxt(DIR_PATH + f'/../../matlab_code/results/matlabNoises/{int(num_events/2)}ruidoTileOcup{int(prob)}.txt')
+    # script_data = np.loadtxt(DIR_PATH + f'/../../results/simulated/pileup_data/prob_{prob}/{num_events}_events/base_data/noise.txt')
 
     # Amplitude
-    # matlab_data = np.loadtxt(DIR_PATH + '/../matlab_code/results/matlabSignals/{}dadosTileOcup0-A.txt'.format(num_events))
-    # script_data = np.loadtxt(DIR_PATH + '/../results/pileup_data/prob_0.0/{}_events/tile_A_signal_prob_0.0.txt'.format(num_events))
+    # matlab_data = np.loadtxt(DIR_PATH + f'/../../matlab_code/results/matlabSignals/{int(num_events/2)}dadosTileOcup{int(prob)}-A.txt')
+    # script_data = np.loadtxt(DIR_PATH + f'/../../results/simulated/pileup_data/prob_{prob}/{num_events}_events/base_data/tile_A.txt')
 
     script_data_mean = np.mean(script_data)
     script_data_std = np.std(script_data)

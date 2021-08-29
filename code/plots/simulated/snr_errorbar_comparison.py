@@ -96,6 +96,7 @@ if __name__ == '__main__':
     ax0.errorbar(probs, smf_means_mean[:len(probs)], c='b', marker='+', yerr=smf_means_std[:len(probs)], label='SMF-HighSNR',ls='None')
     ax0.errorbar(probs, smf_means_mean[len(probs):], c='#c4c4ff', marker='+', yerr=smf_means_std[len(probs):], label='SMF-LowSNR',ls='None')
     ax0.legend(loc='best', fontsize=21)
+    ax0.set_xticks(probs)
 
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
@@ -108,5 +109,6 @@ if __name__ == '__main__':
     ax1.errorbar(probs, smf_stds_mean[:len(probs)], c='b', marker='+', yerr=smf_stds_std[:len(probs)], label='SMF-HighSNR',ls='None')
     ax1.errorbar(probs, smf_stds_mean[len(probs):], c='#c4c4ff', marker='+', yerr=smf_stds_std[len(probs):], label='SMF-LowSNR',ls='None')
     ax1.legend(loc='best', fontsize=21)
+    ax1.set_xticks(probs)
 
     plt.show()

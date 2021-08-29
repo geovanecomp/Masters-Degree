@@ -79,6 +79,7 @@ if __name__ == '__main__':
     ax0.errorbar(probs, dmf_means_mean, c='g', marker='+', yerr=dmf_means_std, label='DMF',ls='None')
     ax0.errorbar(probs, smf_means_mean, c='b', marker='s', yerr=smf_means_std, label='SMF',ls='None')
     ax0.legend(loc='upper left', fontsize=21)
+    ax0.set_xticks(probs)
 
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
@@ -88,5 +89,6 @@ if __name__ == '__main__':
     ax1.errorbar(probs, dmf_stds_mean, c='g', marker='+', yerr=dmf_stds_std, label='DMF', ls='None')
     ax1.errorbar(probs, smf_stds_mean, c='b', marker='s', yerr=smf_stds_std, label='SMF', ls='None')
     ax1.legend(loc='upper left', fontsize=21)
+    ax1.set_xticks(probs)
 
     plt.show()

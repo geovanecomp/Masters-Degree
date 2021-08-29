@@ -8,7 +8,7 @@ DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
     num_events = 200000
-    probs = [0.0, 10.0, 50.0, 100.0]
+    probs = [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
 
     of_stds = []
     of_means = []
@@ -52,6 +52,7 @@ if __name__ == '__main__':
     ax0.plot(probs, dmf_means, '-bo', label='DMF')
     ax0.plot(probs, smf_means, '-go', label='SMF')
     ax0.legend()
+    ax0.set_xticks(probs)
 
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
@@ -62,5 +63,6 @@ if __name__ == '__main__':
     ax1.plot(probs, dmf_stds, '-bo', label='DMF')
     ax1.plot(probs, smf_stds, '-go', label='SMF')
     ax1.legend()
+    ax1.set_xticks(probs)
 
     plt.show()

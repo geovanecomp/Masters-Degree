@@ -3,15 +3,24 @@
 import os.path
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+import inspect
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+from config import Legend, Tick
 
 DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
-    prob = 0.0
-    num_events = 200
+    dataset = 'simulated_snr01'
+    prob = 50.0
+    num_events = 200000
 
     # Pile data
-    BASE_PATH = DIR_PATH + f'/../../results/simulated/pileup_data/prob_{prob}/{num_events}_events'
+    BASE_PATH = DIR_PATH + f'/../../results/{dataset}/pileup_data/prob_{prob}/{num_events}_events'
     true_amplitude_file_name = BASE_PATH + '/base_data/tile_A.txt'
     of_amplitude_file_name = BASE_PATH + '/OF/of_amp_signal.txt'
     dmf_amplitude_file_name = BASE_PATH + '/D_MF/dmf_amp_signal.txt'
@@ -31,31 +40,31 @@ if __name__ == '__main__':
     ax0.grid(axis='y', alpha=0.75)
     ax0.set_title('PU: Verdadeira \n' r'$\mu={}$, $\sigma={}$'
                   .format(true_amplitude.mean(), true_amplitude.std()))
-    ax0.set_xlabel('Valor')
-    ax0.set_ylabel('Frequência')
+    ax0.set_xlabel('Valor', **Legend.font)
+    ax0.set_ylabel('Frequência', **Legend.font)
 
     ax1.hist(of_amplitude, bins="auto")
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
     ax1.set_title('OF: Numerica \n' r'$\mu={}$, $\sigma={}$'
                   .format(of_amplitude.mean(), of_amplitude.std()))
-    ax1.set_xlabel('Valor')
-    ax1.set_ylabel('Frequência')
+    ax1.set_xlabel('Valor', **Legend.font)
+    ax1.set_ylabel('Frequência', **Legend.font)
 
     ax2.hist(dmf_amplitude, bins="auto")
     ax2.legend(prop={'size': 10})
     ax2.grid(axis='y', alpha=0.75)
     ax2.set_title('DMF: Numerica \n' r'$\mu={}$, $\sigma={}$'
                   .format(dmf_amplitude.mean(), dmf_amplitude.std()))
-    ax2.set_xlabel('Valor')
-    ax2.set_ylabel('Frequência')
+    ax2.set_xlabel('Valor', **Legend.font)
+    ax2.set_ylabel('Frequência', **Legend.font)
 
     ax3.hist(smf_amplitude, bins="auto")
     ax3.legend(prop={'size': 10})
     ax3.grid(axis='y', alpha=0.75)
     ax3.set_title('SMF: Numerica \n' r'$\mu={}$, $\sigma={}$'
                   .format(smf_amplitude.mean(), smf_amplitude.std()))
-    ax3.set_xlabel('Valor')
-    ax3.set_ylabel('Frequência')
+    ax3.set_xlabel('Valor', **Legend.font)
+    ax3.set_ylabel('Frequência', **Legend.font)
 
     plt.show()

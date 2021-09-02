@@ -5,8 +5,8 @@ import pandas as pd
 from utils import file_helper
 
 
-def dmf_calculation(number_of_events, probs):
-    base_folder = 'results/simulated/pileup_data'
+def dmf_calculation(number_of_events, probs, dataset):
+    base_folder = f'results/{dataset}/pileup_data'
     number_of_data = number_of_events * 2  # Due to the 50% training of S-MF.
 
     # For printing and files, probability must be in %.
@@ -47,6 +47,7 @@ def dmf_calculation(number_of_events, probs):
 
 
 if __name__ == '__main__':
+    dataset = 'simulated_snr01'
     number_of_events = 100
     probs = [0.0, 0.1, 0.5, 1.0]
-    dmf_calculation(number_of_events, probs)
+    dmf_calculation(number_of_events, probs, dataset)

@@ -7,7 +7,8 @@ from simulated_signals_optimal_filter import of_calculation
 
 np.set_printoptions(suppress=True)
 
-BASE_FOLER = 'results/simulated/pileup_data'
+DATA_SET = 'simulated_snr1'
+BASE_FOLER = f'results/{DATA_SET}/pileup_data'
 
 
 def _save_file(file_name, file_folder, num_events, data):
@@ -26,7 +27,6 @@ if __name__ == '__main__':
     training_percentage = 50
     num_events = int(num_data / (100 / training_percentage))
 
-    # probs = [0.0, 1.0]
     probs = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
     of_stds = dict.fromkeys(probs, 0)
@@ -50,14 +50,14 @@ if __name__ == '__main__':
     for prob in probs:
         print('Processing signal probability:  {}%\n\n\n'.format(prob))
         for i in range(0, num_runs):
-            # print('Execution number: {}\n'.format(i))
+            print('--------------------Execution number: {}\n'.format(i))
 
             # Generates a new data set for MF graph error
-            pu_generator(num_data, [prob])
+            pu_generator(num_data, [prob], DATA_SET)
 
-            of_calculation(num_events, [prob])
-            smf_calculation(num_data, [prob])
-            dmf_calculation(num_events, [prob])
+            of_calculation(num_events, [prob], DATA_SET)
+            dmf_calculation(num_events, [prob], DATA_SET)
+            smf_calculation(num_data, [prob], DATA_SET)
 
             of_error_file_name = f'{BASE_FOLER}/prob_{prob * 100}/{num_data}_events/OF/of_amp_error.txt'
             smf_error_file_name = f'{BASE_FOLER}/prob_{prob * 100}/{num_data}_events/S_MF/smf_amp_error.txt'

@@ -10,13 +10,13 @@ from utils import pulse_helper, file_helper
 np.set_printoptions(suppress=True)
 
 
-def smf_calculation(number_of_data, probs, pedestal=0, training_percentage=50):
+def smf_calculation(number_of_data, probs, dataset, pedestal=0, training_percentage=50):
     # TEN_BITS_ADC_VALUE = 1023
     ADC_VALUE = 5
     DIMENSION = 7
     # For printing and files, probability must be in %.
     probs = np.array(probs) * 100
-    base_folder = 'results/simulated/pileup_data'
+    base_folder = f'results/{dataset}/pileup_data'
 
     for prob in probs:
         base_data = f'{base_folder}/prob_{prob}/{number_of_data}_events'
@@ -166,12 +166,13 @@ def smf_calculation(number_of_data, probs, pedestal=0, training_percentage=50):
 
 
 if __name__ == '__main__':
+    dataset = 'simulated_snr01'
     number_of_data = 200
     pedestal = 0
     # probs = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     probs = [0.0, 0.1, 0.5, 1.0]
 
     t0 = time.time()
-    smf_calculation(number_of_data, probs, pedestal, training_percentage=50)
+    smf_calculation(number_of_data, probs, dataset, pedestal, training_percentage=50)
     print('MF Script finished!')
     print(time.time() - t0, "seconds wall time")

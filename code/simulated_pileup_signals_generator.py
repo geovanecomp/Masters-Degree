@@ -62,9 +62,9 @@ def _apply_pileup_indexes(i, pu_indexes, x):
     return x
 
 
-def pu_generator(number_of_events, signal_probabilities, pedestal=0):
+def pu_generator(number_of_events, signal_probabilities, dataset, pedestal=0):
     number_of_data = TILECAL_NUMBER_OF_CHANNELS * number_of_events
-    base_folder = 'results/simulated/pileup_data'
+    base_folder = f'results/{dataset}/pileup_data'
     number_of_jitter_info = TILECAL_NUMBER_OF_CHANNELS + 1
     jitters = np.zeros((number_of_events, number_of_jitter_info))
 
@@ -110,6 +110,7 @@ def pu_generator(number_of_events, signal_probabilities, pedestal=0):
 
 
 if __name__ == '__main__':
+    dataset = 'simulated_snr01'
     # Represents all possible probabilities of the cell receive signals
     # Example: 0.5 equals 50% of chance of receiving a signal in a collision.
     # We can use an array to generate signas for several probabilities.
@@ -118,4 +119,4 @@ if __name__ == '__main__':
     number_of_events = 200
     pedestal = 0
 
-    pu_generator(number_of_events, signal_probabilities, pedestal)
+    pu_generator(number_of_events, signal_probabilities, dataset, pedestal)

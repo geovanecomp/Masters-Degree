@@ -75,14 +75,14 @@ def pu_generator(number_of_events, signal_probabilities, dataset, pedestal=0):
         signal_mean = 300  # Exponential signal mean
 
         print(f'PU {number_of_events} events Generator - Processing signal probability:  {signal_probability_percentage}%\n')
+
         x = _base_data(number_of_data, pedestal)
         if signal_probability > 0:
             pu_indexes = _pileup_indexes(signal_probability, number_of_data)
             for i in range(0, int(signal_probability * number_of_data)):
                 x = _apply_pileup_indexes(i, pu_indexes, x)
         # Formatting data to the tilecal shape (nx7)
-        pu_data = np.reshape(x, (TILECAL_NUMBER_OF_CHANNELS, number_of_events))
-        pu_data = np.transpose(pu_data)
+        pu_data = np.reshape(x, (number_of_events, TILECAL_NUMBER_OF_CHANNELS))
         pu_signals = np.empty_like(pu_data)
 
         # Stores Noise Data

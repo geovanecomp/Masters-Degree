@@ -41,7 +41,7 @@ def _apply_pileup_indexes(i, pu_indexes, x):
     number_of_data = len(x)
 
     first_pu_index = -3
-    last_pu_index = 3
+    last_pu_index = 4
     index_in_left_corner = pu_indexes[i] <= 3
     index_in_right_corner = pu_indexes[i] >= (number_of_data - 3)
     off_set = 3
@@ -50,15 +50,14 @@ def _apply_pileup_indexes(i, pu_indexes, x):
     # Besides that, for cases when i=0 being the central value, j can be
     # -3, -2 or -1 sometimes, that is why we have "j+off_set", to fix this.
     if index_in_left_corner:
-        for j in range(pu_indexes[i] - off_set, last_pu_index):
-            x[pu_indexes[i] + j] = x[pu_indexes[i] + j] + pu[j + off_set]
-
+        for j in range(pu_indexes[i] - 1, last_pu_index):
+            x[pu_indexes[i] + j -1] = x[pu_indexes[i] + j-1] + pu[j + off_set]
     elif index_in_right_corner:
-        for j in range(first_pu_index, number_of_data - pu_indexes[i]):
-            x[pu_indexes[i] + j] = x[pu_indexes[i] + j] + pu[j + off_set]
+        for j in range(first_pu_index, (number_of_data - pu_indexes[i])+1):
+            x[pu_indexes[i] + j-1] = x[pu_indexes[i] + j-1] + pu[j + off_set]
     else:
         for j in range(first_pu_index, last_pu_index):
-            x[pu_indexes[i] + j] = x[pu_indexes[i] + j] + pu[j + off_set]
+            x[pu_indexes[i] + j-1] = x[pu_indexes[i] + j-1] + pu[j + off_set]
     return x
 
 
@@ -76,13 +75,11 @@ def pu_generator(number_of_events, signal_probabilities, dataset, pedestal=0):
         signal_mean = 300  # Exponential signal mean
 
         print(f'PU {number_of_events} events Generator - Processing signal probability:  {signal_probability_percentage}%\n')
-
         x = _base_data(number_of_data, pedestal)
         if signal_probability > 0:
             pu_indexes = _pileup_indexes(signal_probability, number_of_data)
             for i in range(0, int(signal_probability * number_of_data)):
                 x = _apply_pileup_indexes(i, pu_indexes, x)
-
         # Formatting data to the tilecal shape (nx7)
         pu_data = np.reshape(x, (TILECAL_NUMBER_OF_CHANNELS, number_of_events))
         pu_data = np.transpose(pu_data)
@@ -110,7 +107,7 @@ def pu_generator(number_of_events, signal_probabilities, dataset, pedestal=0):
 
 
 if __name__ == '__main__':
-    dataset = 'simulated_snr01'
+    dataset = 'simulated'
     # Represents all possible probabilities of the cell receive signals
     # Example: 0.5 equals 50% of chance of receiving a signal in a collision.
     # We can use an array to generate signas for several probabilities.

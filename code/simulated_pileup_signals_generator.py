@@ -61,7 +61,7 @@ def _apply_pileup_indexes(i, pu_indexes, x):
     return x
 
 
-def pu_generator(number_of_events, signal_probabilities, dataset, pedestal=0):
+def pu_generator(signal_mean, number_of_events, signal_probabilities, dataset, pedestal=0):
     number_of_data = TILECAL_NUMBER_OF_CHANNELS * number_of_events
     base_folder = f'results/{dataset}/pileup_data'
     number_of_jitter_info = TILECAL_NUMBER_OF_CHANNELS + 1
@@ -70,11 +70,8 @@ def pu_generator(number_of_events, signal_probabilities, dataset, pedestal=0):
     for level in range(0, len(signal_probabilities)):
         signal_probability = signal_probabilities[level]  # Signal_probability
         signal_probability_percentage = signal_probability * 100
-        # 300 ADC when converted to MeV it is equal to 3000MeV = 3GeV
-        # In this case we are considering 1ADC=10MeV (instead of 12MeV)
-        signal_mean = 300  # Exponential signal mean
 
-        print(f'PU {number_of_events} events Generator - Processing signal probability:  {signal_probability_percentage}%\n')
+        print(f'PU {number_of_events} events Generator {signal_mean} ADCs - Processing signal probability:  {signal_probability_percentage}%\n')
 
         x = _base_data(number_of_data, pedestal)
         if signal_probability > 0:
@@ -113,7 +110,10 @@ if __name__ == '__main__':
     # We can use an array to generate signas for several probabilities.
     # signal_probabilities = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     signal_probabilities = [0.0, 0.1, 0.5, 1.0]
+    # 300 ADC when converted to MeV it is equal to 3000MeV = 3GeV
+    # In this case we are considering 1ADC=10MeV (instead of 12MeV)
+    signal_mean = 300  # Exponential signal mean
     number_of_events = 200
     pedestal = 0
 
-    pu_generator(number_of_events, signal_probabilities, dataset, pedestal)
+    pu_generator(signal_mean, number_of_events, signal_probabilities, dataset, pedestal)

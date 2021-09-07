@@ -1,17 +1,22 @@
 """Compares OF and MF error"""
 
 import os.path
+import sys
+import inspect
 import numpy as np
 import matplotlib.pyplot as plt
 
-# plt.rcParams['xtick.labelsize'] = 22
-# plt.rcParams['ytick.labelsize'] = 22
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+from config import Legend, Tick
 
 DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
     # Real data
-    amplitude_mean = 10
+    amplitude_mean = 300
     channel = 1
     noise_mean = 30
 
@@ -31,19 +36,23 @@ if __name__ == '__main__':
         print(f'D-MF Amp len: {len(dmf_amp_error)}')
         print(f'S-MF Amp len: {len(smf_amp_error)}')
 
-    bins = 200
+    fig, ((ax0)) = plt.subplots(nrows=1, ncols=1)
+    rangeR = 600
+    rangeL = -rangeR
+    bins = 100
 
-    fig, ((ax0)) = plt.subplots(nrows=1, ncols=1, figsize=(19,10))
-    font = {
-            'family': 'Times New Roman',
-            'size': 16
-            }
+    print('\nOF ' r'$\mu= {}$, $\sigma= {}$'
+          '\nD-MF ' r'$\mu= {}$, $\sigma= {}$'
+          '\nS-MF ' r'$\mu= {}$, $\sigma= {}$'
+          .format(of_amp_error.mean(), of_amp_error.std(),
+                  dmf_amp_error.mean(), dmf_amp_error.std(),
+                  smf_amp_error.mean(), smf_amp_error.std()))
 
     fig.suptitle(f'Comparação do erro com Ruído Médio = {noise_mean} Canal: {channel} Amplitude: {amplitude_mean} Eventos: {len(of_amp_error)}')
 
-    ax0.hist(of_amp_error, bins=bins, range=(-100, 100), color='red', histtype=u'step', label='OF')
-    ax0.hist(dmf_amp_error, bins=bins, range=(-100, 100), facecolor='dimgrey', histtype=u'step', label='D-MF')
-    ax0.hist(smf_amp_error, bins=bins, range=(-100, 100), facecolor='blue', histtype=u'step', label='S-MF')
+    ax0.hist(of_amp_error, bins=bins, range=(rangeL, rangeR), color='red', histtype=u'step', label='OF')
+    ax0.hist(dmf_amp_error, bins=bins, range=(rangeL, rangeR), color='green', histtype=u'step', label='D-MF')
+    ax0.hist(smf_amp_error, bins=bins, range=(rangeL, rangeR), color='blue', histtype=u'step', label='S-MF')
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
     ax0.set_title('\nOF ' r'$\mu={}$, $\sigma={}$'
@@ -52,7 +61,9 @@ if __name__ == '__main__':
                   .format(of_amp_error.mean(), of_amp_error.std(),
                           dmf_amp_error.mean(), dmf_amp_error.std(),
                           smf_amp_error.mean(), smf_amp_error.std()))
-    ax0.set_xlabel('Erro de Estimação', **font)
-    ax0.set_ylabel('Eventos', **font)
+    ax0.set_xlabel('Erro de Estimação', **Legend.font)
+    ax0.set_ylabel('Eventos', **Legend.font)
+    plt.xticks(**Tick.font)
+    plt.yticks(**Tick.font)
 
     plt.show()

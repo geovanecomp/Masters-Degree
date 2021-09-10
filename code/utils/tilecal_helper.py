@@ -9,7 +9,7 @@ FULL_PEDESTAL_DIRECTORY_FILE = 'data/ped_tile.txt'
 DEFAULT_PARTITION_NAME = 'LBA'
 
 
-# Tilecal has 4 Partitions called: LBA, EBA, LBC, EBC
+# Tilecal has 4 Partitions called: LBA, LBC, EBA, EBC
 # Each one has its own number which is respectively 0, 1, 2, 3.
 def _partition_mapper(tile_partition):
     if isinstance(tile_partition, float) or isinstance(tile_partition, int):

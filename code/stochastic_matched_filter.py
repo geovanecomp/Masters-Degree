@@ -169,19 +169,19 @@ def mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percenta
     amp_signal = pd.DataFrame(amp_signal)
     amp_error = amp_signal.values - amplitude.values
 
-    folder_name = f'{base_folder}/E_MF/mu{noise_mean}'
-    file_helper.save_file_in(f'mf_amp_signal{sufix}', folder_name, amp_signal)
-    file_helper.save_file_in(f'mf_amp_noise{sufix}', folder_name, amp_noise)
-    file_helper.save_file_in(f'mf_amp_error{sufix}', folder_name, amp_error)
+    folder_name = f'{base_folder}/S_MF/mu{noise_mean}'
+    file_helper.save_file_in(f'smf_amp_signal{sufix}', folder_name, amp_signal)
+    file_helper.save_file_in(f'smf_amp_noise{sufix}', folder_name, amp_noise)
+    file_helper.save_file_in(f'smf_amp_error{sufix}', folder_name, amp_error)
 
     print('Finished!')
 
 
 if __name__ == '__main__':
-    tile_partition = 'LBA'
-    amplitude_mean = 30
+    tile_partition = 'EBA'
+    amplitude_mean = 100
     noise_mean = 90
-    channel = 36
+    channel = 1
     t0 = time.time()
 
     mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percentage=50, sufix=f'_ch{channel}')

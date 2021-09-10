@@ -16,7 +16,7 @@ DIR_PATH = os.path.dirname(__file__)
 
 if __name__ == '__main__':
     # Real data
-    noise_mean = 90
+    noise_mean = 30
 
     base_folder = DIR_PATH + '/../../data'
     noise_ch1_file_name = base_folder + f'/EBA/EBAmu{noise_mean}_no_ped_ch1.txt'
@@ -30,19 +30,17 @@ if __name__ == '__main__':
     bins = 100
 
     fig, ((ax0)) = plt.subplots(nrows=1, ncols=1)
-    fig.suptitle(f'Comparação do erro com Ruído Médio = {noise_mean} Canal: {channel} Amplitude: {amplitude_mean} Eventos: {len(of_amp_error)}')
-
-    ax0.hist(noise_ch1, bins=bins, color='red', histtype=u'step', label='A1')
-    ax0.hist(noise_ch10, bins=bins, color='green', histtype=u'step', label='A3')
-    ax0.hist(noise_ch36, bins=bins, color='blue', histtype=u'step', label='A9')
+    ax0.hist(noise_ch36, bins=bins, color='red', histtype=u'step', label='A9')
+    ax0.hist(noise_ch10, bins=bins, color='green', histtype=u'step', label='A13')
+    ax0.hist(noise_ch1, bins=bins, color='blue', histtype=u'step', label='E4')
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
-    ax0.set_title('\nA1 ' r'$\mu={}$, $\sigma={}$'
-                  '\nA3 ' r'$\mu={}$, $\sigma={}$'
-                  '\nA9 ' r'$\mu={}$, $\sigma={}$'
-                  .format(noise_ch1.mean(), noise_ch1.std(),
+    ax0.set_title('\nA9 ' r'$\mu={}$, $\sigma={}$'
+                  '\nA13 ' r'$\mu={}$, $\sigma={}$'
+                  '\nE4 ' r'$\mu={}$, $\sigma={}$'
+                  .format(noise_ch36.mean(), noise_ch36.std(),
                           noise_ch10.mean(), noise_ch10.std(),
-                          noise_ch36.mean(), noise_ch36.std()))
+                          noise_ch1.mean(), noise_ch1.std()))
     ax0.set_xlabel('Ruído', **Legend.font)
     ax0.set_ylabel('Eventos', **Legend.font)
     ax0.set_xlim(-150, 150)

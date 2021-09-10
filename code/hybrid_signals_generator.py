@@ -49,4 +49,4 @@ if __name__ == '__main__':
     tile_partition = 'EBA'
     noise_file_name = f'data/{tile_partition}/{tile_partition}mu{noise_mean}_no_ped{sufix}.txt'
     noises = pd.read_csv(noise_file_name, sep=" ", usecols=(3, 4, 5, 6, 7, 8, 9), header=None)
-    signals_generator(amp_mean, noises, noise_mean, sufix)
+    signals_generator(amplitude_mean, noises, noise_mean, sufix)

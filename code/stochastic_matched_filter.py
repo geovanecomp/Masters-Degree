@@ -34,6 +34,8 @@ def mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percenta
     amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)[:qtd_for_testing]
     signal_testing = pd.read_csv(signal_file_name, sep=" ", header=None)[:qtd_for_testing][:]
     noise_testing = real_noises[:qtd_for_testing][:]  # test with 1st % part
+
+    # Should use the 2nd half, since the 2nd half is not used in the 1st half of signal_testing
     noise_training = real_noises[qtd_for_training:][:]  # train with 2nd % part
 
     print(f'Training with {len(noise_training)} events')

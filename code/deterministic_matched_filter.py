@@ -20,7 +20,9 @@ def deterministic_matched_filter(amplitude_mean, noise_mean, tile_partition, suf
 
     amplitude = pd.read_csv(amplitude_file_name, sep=" ", header=None)[:number_of_data]
     signal_testing = pd.read_csv(signal_file_name, sep=" ", header=None)[:number_of_data][:]
-    noises = all_noises[:number_of_data][:]
+
+    # Should use the 2nd half, since the 2nd half is not used in the 1st half of signal_testing
+    noises = all_noises[number_of_data:][:]
 
     S = pd.DataFrame([0, 0.0172, 0.4524, 1.0000, 0.5633, 0.1493, 0.0424])
 
@@ -42,7 +44,7 @@ def deterministic_matched_filter(amplitude_mean, noise_mean, tile_partition, suf
 
 if __name__ == '__main__':
     tile_partition = 'EBA'
-    amplitude_mean = 30
-    noise_mean = 30
-    channel = 10
+    amplitude_mean = 10
+    channel = 1
+    noise_mean = 90
     deterministic_matched_filter(amplitude_mean, noise_mean, tile_partition, sufix=f'_ch{channel}')

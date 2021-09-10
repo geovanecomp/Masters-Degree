@@ -8,6 +8,15 @@ import datashader.transfer_functions as tf
 from datashader.mpl_ext import dsshow
 from functools import partial
 
+import sys
+import inspect
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+
+from config import Legend, Tick
+
 DIR_PATH = os.path.dirname(__file__)
 
 
@@ -26,11 +35,13 @@ def correlation_plot(x, y, ax, method):
     ax.legend()
     ax.grid(True)
 
-    ax.set_ylabel(f'Erro Relativo {method}')
-    ax.set_xlabel('Amplitude de Referencia')
+    ax.set_ylabel(f'{method}', **Legend.font)
+    if method == 'S-MF':
+        ax.set_xlabel('Amplitude de Referência', **Legend.font)
+
     df = pd.DataFrame(dict(x=x, y=y))
 
-    da1 = dsshow(df, ds.Point('x', 'y'), norm='log', aspect='auto', ax=ax, x_range=(-10, 400), y_range=(-50, 50), shade_hook=partial(tf.dynspread, threshold=0.8))
+    da1 = dsshow(df, ds.Point('x', 'y'), norm='log', aspect='auto', ax=ax, x_range=(-0.1, 100), y_range=(-50, 50), shade_hook=partial(tf.dynspread, threshold=0.8))
 
     fig.colorbar(da1, ax=ax).set_label('Densidade')
     return ax
@@ -40,7 +51,7 @@ if "__main__" == __name__:
 
     # Real data
     amplitude_mean = 10
-    noise_mean = 30
+    noise_mean = 90
     channel = 1
 
     sufix = f'_ch{channel}'
@@ -61,8 +72,13 @@ if "__main__" == __name__:
     smf_relative_error = _relative_error(reference_data, smf_data)
 
     fig, (ax0, ax1, ax2) = plt.subplots(3)
+
     fig.suptitle(f'Correlação entre Amplitudes \n Ruido: {noise_mean} Canal: {channel} Amplitude: {amplitude_mean}')
     ax0 = correlation_plot(reference_data, of_relative_error, ax0, method='OF')
     ax1 = correlation_plot(reference_data, dmf_relative_error, ax1, method='D-MF')
     ax2 = correlation_plot(reference_data, smf_relative_error, ax2, method='S-MF')
+
+    ax0.tick_params(axis='both', which='major', labelsize=16)
+    ax1.tick_params(axis='both', which='major', labelsize=16)
+    ax2.tick_params(axis='both', which='major', labelsize=16)
     plt.show()

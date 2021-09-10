@@ -62,6 +62,7 @@ if __name__ == '__main__':
     ax0.plot(probs, smf_means, '-go', label='SMF')
     ax0.legend()
     ax0.set_xticks(probs)
+    ax0.tick_params(axis='both', which='major', labelsize=14)
 
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
@@ -73,5 +74,6 @@ if __name__ == '__main__':
     ax1.plot(probs, smf_stds, '-go', label='SMF')
     ax1.legend()
     ax1.set_xticks(probs)
+    ax1.tick_params(axis='both', which='major', labelsize=14)
 
     plt.show()

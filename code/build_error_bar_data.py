@@ -7,7 +7,7 @@ from simulated_signals_optimal_filter import of_calculation
 
 np.set_printoptions(suppress=True)
 
-DATA_SET = 'simulated_snr1'
+DATA_SET = 'simulated_snr3'
 BASE_FOLER = f'results/{DATA_SET}/pileup_data'
 
 
@@ -22,6 +22,7 @@ def _save_file(file_name, file_folder, num_events, data):
 
 
 if __name__ == '__main__':
+    signal_mean = 100
     num_runs = 10
     num_data = 200000
     training_percentage = 50
@@ -53,7 +54,7 @@ if __name__ == '__main__':
             print('--------------------Execution number: {}\n'.format(i))
 
             # Generates a new data set for MF graph error
-            pu_generator(num_data, [prob], DATA_SET)
+            pu_generator(signal_mean, num_data, [prob], DATA_SET)
 
             of_calculation(num_events, [prob], DATA_SET)
             dmf_calculation(num_events, [prob], DATA_SET)

@@ -17,15 +17,16 @@ from config import Legend, Tick
 
 DIR_PATH = os.path.dirname(__file__)
 BASE_PATH = DIR_PATH + '/../../results'
-
+np.set_printoptions(suppress=True, precision=3)
 if __name__ == '__main__':
+    np.set_printoptions(suppress=True, precision=4)
     num_runs = 10
-    num_events = 20000
+    num_events = 200000
 
     probs = [0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0]
     # simulated_amp = 300 ADC and simulated_low_snr_amp = 10 ADC
     amplitudes = [300, 100, 10]
-    datasets = ['simulated', 'simulated_snr1', 'simulated_snr01']
+    datasets = ['simulated_snr3', 'simulated_snr1', 'simulated_snr01']
 
     of_stds = dict.fromkeys(probs, 0)
     of_means = dict.fromkeys(probs, 0)
@@ -83,19 +84,13 @@ if __name__ == '__main__':
             smf_stds_mean.append(np.mean(smf_errorbar_stds))
             smf_stds_std.append(np.std(smf_errorbar_stds))
 
-    fig, ((ax0, ax1)) = plt.subplots(nrows=1, ncols=2)
-    font = {
-            'family': 'Times New Roman',
-            'size': 22
-            }
-
     part1 = len(probs)
     part2 = part1 + len(probs)
 
-    fig.suptitle(f'SNR3 X SNR1 X SNR0.1 para OF X DMF X SMF \n {num_events} eventos & {num_runs} runs')
+    fig, ((ax0, ax1)) = plt.subplots(nrows=1, ncols=2)
     ax0.legend(prop={'size': 10})
     ax0.grid(axis='y', alpha=0.75)
-    ax0.set_xlabel('SNR', **Legend.font)
+    ax0.set_xlabel('Ocupação (%)', **Legend.font)
     ax0.set_ylabel('Média', **Legend.font)
     ax0.errorbar(probs, of_means_mean[:part1], c='r', marker='o', yerr=of_means_std[:part1], label='OF-SNR3',ls='None')
     ax0.errorbar(probs, of_means_mean[part1:part2], c='#FA6E6E', marker='o', yerr=of_means_std[part1:part2], label='OF-SNR1',ls='None')
@@ -108,10 +103,11 @@ if __name__ == '__main__':
     ax0.errorbar(probs, smf_means_mean[part2:], c='#AFC7FF', marker='+', yerr=smf_means_std[part2:], label='SMF-SNR0.1',ls='None')
     ax0.legend(loc='best', fontsize=21)
     ax0.set_xticks(probs)
+    ax0.tick_params(axis='both', which='major', labelsize=16)
 
     ax1.legend(prop={'size': 10})
     ax1.grid(axis='y', alpha=0.75)
-    ax1.set_xlabel('SNR', **Legend.font)
+    ax1.set_xlabel('Ocupação (%)', **Legend.font)
     ax1.set_ylabel('RMS', **Legend.font)
     ax1.errorbar(probs, of_stds_mean[:part1], c='r', marker='o', yerr=of_stds_std[:part1], label='OF-SNR3',ls='None')
     ax1.errorbar(probs, of_stds_mean[part1:part2], c='#FA6E6E', marker='o', yerr=of_stds_std[part1:part2], label='OF-SNR1',ls='None')
@@ -124,5 +120,6 @@ if __name__ == '__main__':
     ax1.errorbar(probs, smf_stds_mean[part2:], c='#AFC7FF', marker='+', yerr=smf_stds_std[part2:], label='SMF-SNR0.1',ls='None')
     ax1.legend(loc='best', fontsize=21)
     ax1.set_xticks(probs)
+    ax1.tick_params(axis='both', which='major', labelsize=16)
 
     plt.show()

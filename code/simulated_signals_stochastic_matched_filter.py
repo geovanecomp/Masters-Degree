@@ -10,7 +10,7 @@ from utils import pulse_helper, file_helper
 np.set_printoptions(suppress=True)
 
 
-def smf_calculation(number_of_data, probs, dataset, pedestal=0, training_percentage=50):
+def smf_calculation(number_of_data, probs, dataset, n_pca_components, pedestal=0, training_percentage=50):
     # TEN_BITS_ADC_VALUE = 1023
     ADC_VALUE = 5
     DIMENSION = 7
@@ -62,7 +62,6 @@ def smf_calculation(number_of_data, probs, dataset, pedestal=0, training_percent
 
         pure_signal = pd.DataFrame(pure_signal)
 
-        n_pca_components = DIMENSION
         pca = PCA(n_components=n_pca_components)
         coeff = pd.DataFrame(pca.fit(pure_signal.dot(W_t)).components_)
         coeff_t = coeff.transpose()
@@ -74,10 +73,10 @@ def smf_calculation(number_of_data, probs, dataset, pedestal=0, training_percent
         reference_pulse = pd.DataFrame([0.0000, 0.0172, 0.4524, 1.0000, 0.5633, 0.1493, 0.0424])
         bleached_reference_pulse = reference_pulse.T.dot(W_t)
 
-        optimal_reference_pulse = bleached_reference_pulse.dot(coeff_t[:][:n_pca_components])
+        optimal_reference_pulse = bleached_reference_pulse.dot(coeff_t)
 
-        optimal_noise = pd.DataFrame((np.dot(noise_testing, W_t)).dot(coeff_t[:][:n_pca_components]))
-        optimal_signal = (signal_testing.dot(W_t)).dot(coeff_t[:][:n_pca_components])
+        optimal_noise = pd.DataFrame((np.dot(noise_testing, W_t)).dot(coeff_t))
+        optimal_signal = (signal_testing.dot(W_t)).dot(coeff_t)
 
         No = variance * 2
         h1 = np.zeros((DIMENSION, DIMENSION))
@@ -92,34 +91,34 @@ def smf_calculation(number_of_data, probs, dataset, pedestal=0, training_percent
 
         for ev in range(0, len(noise_testing)):
             IR_noise[ev] = (1.0 / No) * ((
-                        (optimal_noise.values[ev][:].dot((coeff[:][:n_pca_components])))
+                        (optimal_noise.values[ev][:].dot((coeff)))
                         .dot(h1).dot(
-                            (optimal_noise.values[ev][:].dot(coeff[:][:n_pca_components]))
+                            (optimal_noise.values[ev][:].dot(coeff))
                         ).transpose()
                     ).transpose())
 
         for ev in range(0, len(signal_testing)):
             IR_signal[ev] = (1.0 / No) * ((
-                        (optimal_signal.values[ev][:].dot((coeff[:][:n_pca_components])))
+                        (optimal_signal.values[ev][:].dot((coeff)))
                         .dot(h1).dot(
-                            (optimal_signal.values[ev][:].dot(coeff[:][:n_pca_components]))
+                            (optimal_signal.values[ev][:].dot(coeff))
                         ).transpose()
                     ).transpose())
 
         ID_noise = np.zeros((len(noise_testing), 1))
         ID_signal = np.zeros((len(signal_testing), 1))
         for ev in range(0, len(noise_testing)):
-            ID_noise[ev] = ((optimal_reference_pulse.dot(coeff[:][:n_pca_components]))
+            ID_noise[ev] = ((optimal_reference_pulse.dot(coeff))
                             .dot(h2).dot(
-                                (optimal_noise.values[ev][:].dot(coeff[:][:n_pca_components]))
+                                (optimal_noise.values[ev][:].dot(coeff))
                                 .transpose()
                                 )
                             )
 
         for ev in range(0, len(signal_testing)):
-            ID_signal[ev] = ((optimal_reference_pulse.dot(coeff[:][:n_pca_components]))
+            ID_signal[ev] = ((optimal_reference_pulse.dot(coeff))
                              .dot(h2).dot(
-                                (optimal_signal.values[ev][:].dot(coeff[:][:n_pca_components]))
+                                (optimal_signal.values[ev][:].dot(coeff))
                                 .transpose()
                                 )
                              )
@@ -132,10 +131,10 @@ def smf_calculation(number_of_data, probs, dataset, pedestal=0, training_percent
         amp_signal = np.zeros((len(signal_testing), 1))
 
         a = (1.0 / No) * (
-                    (optimal_reference_pulse.dot(coeff[:][:n_pca_components])).dot(h1)
-                    .dot((optimal_reference_pulse.dot(coeff[:][:n_pca_components])).transpose())
+                    (optimal_reference_pulse.dot(coeff)).dot(h1)
+                    .dot((optimal_reference_pulse.dot(coeff)).transpose())
                 )
-        b = (optimal_reference_pulse.dot(coeff[:][:n_pca_components])).dot(h2).dot((optimal_reference_pulse.dot(coeff[:][:n_pca_components])).transpose())
+        b = (optimal_reference_pulse.dot(coeff)).dot(h2).dot((optimal_reference_pulse.dot(coeff[:][:n_pca_components])).transpose())
 
         cs = 0
         cr = 0
@@ -157,7 +156,7 @@ def smf_calculation(number_of_data, probs, dataset, pedestal=0, training_percent
         amp_signal = pd.DataFrame(amp_signal)
         amp_error = amp_signal.values - amplitude.values
 
-        folder_name = f'{base_data}/S_MF'
+        folder_name = f'{base_data}/S_MF_PCA{n_pca_components}'
         file_helper.save_file_in('smf_amp_signal', folder_name, amp_signal)
         file_helper.save_file_in('smf_amp_noise', folder_name, amp_noise)
         file_helper.save_file_in('smf_amp_error', folder_name, amp_error)
@@ -166,13 +165,13 @@ def smf_calculation(number_of_data, probs, dataset, pedestal=0, training_percent
 
 
 if __name__ == '__main__':
-    dataset = 'simulated_snr01'
-    number_of_data = 200
+    dataset = 'simulated_snr1'
+    number_of_data = 200000
     pedestal = 0
-    # probs = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    probs = [0.0, 0.1, 0.5, 1.0]
+    probs = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+    n_pca_components = 1
 
     t0 = time.time()
-    smf_calculation(number_of_data, probs, dataset, pedestal, training_percentage=50)
+    smf_calculation(number_of_data, probs, dataset, n_pca_components, pedestal, training_percentage=50)
     print('MF Script finished!')
     print(time.time() - t0, "seconds wall time")

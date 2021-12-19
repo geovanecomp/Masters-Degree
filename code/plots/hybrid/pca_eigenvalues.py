@@ -33,6 +33,6 @@ if __name__ == '__main__':
     plt.xticks(**Tick.font)
     plt.yticks(**Tick.font)
     plt.xlabel('Componentes', **Legend.font)
-    plt.ylabel('Energia (%)', **Legend.font)
+    plt.ylabel('Energia', **Legend.font)
 
     plt.show()

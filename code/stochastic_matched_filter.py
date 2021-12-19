@@ -10,7 +10,7 @@ from utils import pulse_helper, file_helper
 np.set_printoptions(suppress=True)
 
 
-def mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percentage=50, sufix=''):
+def mf_calculation(amplitude_mean, noise_mean, tile_partition, n_pca_components, training_percentage=50, sufix=''):
     # TEN_BITS_ADC_VALUE = 1023
     ADC_VALUE = 5
     DIMENSION = 7
@@ -66,7 +66,6 @@ def mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percenta
 
     pure_signal = pd.DataFrame(pure_signal)
 
-    n_pca_components = DIMENSION
     pca = PCA(n_components=n_pca_components)
     coeff = pd.DataFrame(pca.fit(pure_signal.dot(W_t)).components_)
     coeff_t = coeff.transpose()
@@ -78,10 +77,10 @@ def mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percenta
     reference_pulse = pd.DataFrame([0.0000, 0.0172, 0.4524, 1.0000, 0.5633, 0.1493, 0.0424])
     bleached_reference_pulse = reference_pulse.T.dot(W_t)
 
-    optimal_reference_pulse = bleached_reference_pulse.dot(coeff_t[:][:n_pca_components])
+    optimal_reference_pulse = bleached_reference_pulse.dot(coeff_t)
 
-    optimal_noise = pd.DataFrame((np.dot(noise_testing, W_t)).dot(coeff_t[:][:n_pca_components]))
-    optimal_signal = (signal_testing.dot(W_t)).dot(coeff_t[:][:n_pca_components])
+    optimal_noise = pd.DataFrame((np.dot(noise_testing, W_t)).dot(coeff_t))
+    optimal_signal = (signal_testing.dot(W_t)).dot(coeff_t)
 
     No = variance * 2
     h1 = np.zeros((DIMENSION, DIMENSION))
@@ -96,34 +95,34 @@ def mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percenta
 
     for ev in range(0, len(noise_testing)):
         IR_noise[ev] = (1.0 / No) * ((
-                    (optimal_noise.values[ev][:].dot((coeff[:][:n_pca_components])))
+                    (optimal_noise.values[ev][:].dot((coeff)))
                     .dot(h1).dot(
-                        (optimal_noise.values[ev][:].dot(coeff[:][:n_pca_components]))
+                        (optimal_noise.values[ev][:].dot(coeff))
                     ).transpose()
                 ).transpose())
 
     for ev in range(0, len(signal_testing)):
         IR_signal[ev] = (1.0 / No) * ((
-                    (optimal_signal.values[ev][:].dot((coeff[:][:n_pca_components])))
+                    (optimal_signal.values[ev][:].dot((coeff)))
                     .dot(h1).dot(
-                        (optimal_signal.values[ev][:].dot(coeff[:][:n_pca_components]))
+                        (optimal_signal.values[ev][:].dot(coeff))
                     ).transpose()
                 ).transpose())
 
     ID_noise = np.zeros((len(noise_testing), 1))
     ID_signal = np.zeros((len(signal_testing), 1))
     for ev in range(0, len(noise_testing)):
-        ID_noise[ev] = ((optimal_reference_pulse.dot(coeff[:][:n_pca_components]))
+        ID_noise[ev] = ((optimal_reference_pulse.dot(coeff))
                         .dot(h2).dot(
-                            (optimal_noise.values[ev][:].dot(coeff[:][:n_pca_components]))
+                            (optimal_noise.values[ev][:].dot(coeff))
                             .transpose()
                             )
                         )
 
     for ev in range(0, len(signal_testing)):
-        ID_signal[ev] = ((optimal_reference_pulse.dot(coeff[:][:n_pca_components]))
+        ID_signal[ev] = ((optimal_reference_pulse.dot(coeff))
                          .dot(h2).dot(
-                            (optimal_signal.values[ev][:].dot(coeff[:][:n_pca_components]))
+                            (optimal_signal.values[ev][:].dot(coeff))
                             .transpose()
                             )
                          )
@@ -132,24 +131,14 @@ def mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percenta
     estimated_signal = ID_signal + IR_signal
     print('Almost...\n')
 
-    # TODO: These variables are not being used - Investigate
-    # Amplitude estimative
-    # b1 = coeff[:][:n_pca_components].transpose().dot(coeff_t[:][:n_pca_components])
-    # # DAQUI PARA BAIXO B2 E B3 NAO BATEM DEVIDO A ALGUMAS LINHAS DE COEFF
-    # b2 = (1.0 / No) * (
-    #     coeff_t[:][:n_pca_components].transpose().dot(h1)
-    #     .dot(coeff[:][:n_pca_components])
-    # )
-    # b3 = (optimal_reference_pulse.dot(coeff[:][:n_pca_components])).dot(h2).dot(coeff[:][:n_pca_components])
-
     amp_noise = np.zeros((len(noise_testing), 1))
     amp_signal = np.zeros((len(signal_testing), 1))
 
     a = (1.0 / No) * (
-                (optimal_reference_pulse.dot(coeff[:][:n_pca_components])).dot(h1)
-                .dot((optimal_reference_pulse.dot(coeff[:][:n_pca_components])).transpose())
+                (optimal_reference_pulse.dot(coeff)).dot(h1)
+                .dot((optimal_reference_pulse.dot(coeff)).transpose())
             )
-    b = (optimal_reference_pulse.dot(coeff[:][:n_pca_components])).dot(h2).dot((optimal_reference_pulse.dot(coeff[:][:n_pca_components])).transpose())
+    b = (optimal_reference_pulse.dot(coeff)).dot(h2).dot((optimal_reference_pulse.dot(coeff)).transpose())
 
     cs = 0
     cr = 0
@@ -171,7 +160,7 @@ def mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percenta
     amp_signal = pd.DataFrame(amp_signal)
     amp_error = amp_signal.values - amplitude.values
 
-    folder_name = f'{base_folder}/S_MF/mu{noise_mean}'
+    folder_name = f'{base_folder}/S_MF_PCA{n_pca_components}/mu{noise_mean}'
     file_helper.save_file_in(f'smf_amp_signal{sufix}', folder_name, amp_signal)
     file_helper.save_file_in(f'smf_amp_noise{sufix}', folder_name, amp_noise)
     file_helper.save_file_in(f'smf_amp_error{sufix}', folder_name, amp_error)
@@ -180,12 +169,13 @@ def mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percenta
 
 
 if __name__ == '__main__':
-    tile_partition = 'EBA'
-    amplitude_mean = 100
-    noise_mean = 90
-    channel = 1
+    tile_partition = 'LBA'
+    amplitude_mean = 10
+    noise_mean = 30
+    channel = 36
+    n_pca_components = 1
     t0 = time.time()
 
-    mf_calculation(amplitude_mean, noise_mean, tile_partition, training_percentage=50, sufix=f'_ch{channel}')
+    mf_calculation(amplitude_mean, noise_mean, tile_partition, n_pca_components, training_percentage=50, sufix=f'_ch{channel}')
     print('MF Script finished!')
     print(time.time() - t0, "seconds wall time")

@@ -1,4 +1,4 @@
-# Masters-Degree
+# Masters-Degree: Energy Reconstruction of Particle Collisions
 This repo contains my ongoing code for my Masters in Computational Modeling at Rio de Janeiro State University.
 
 ## Here is the project summary (I still need to prepare a proper Readme, sorry 😇):
